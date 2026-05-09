@@ -11,29 +11,15 @@ bug-reports:     https://github.com/jgm/pandoc/issues
 stability:       alpha
 homepage:        https://pandoc.org
 category:        Text
-synopsis:        Conversion between documentation formats
-description:     Pandoc-cli provides a command-line executable that uses the
-                 pandoc library to convert between markup formats.
+synopsis:        Conversion between Pandoc Markdown and HTML (lean fork CLI)
+description:     Command-line executable for the lean pandoc fork. Lua,
+                 server, and repl support are unconditionally absent;
+                 the flags from upstream are removed.
 extra-source-files:
                  man/pandoc.1
-                 man/pandoc-lua.1
-                 man/pandoc-server.1
 source-repository head
   type:          git
-  location:      https://github.com/jgm/pandoc.git
-
-flag lua
-  description:   Support custom modifications and conversions with the
-                 pandoc Lua scripting engine.
-  default:       True
-
-flag server
-  Description:   Include support for running pandoc as an HTTP server.
-  Default:       True
-
-flag repl
-  Description:   Include support for running a pandoc Lua repl.
-  Default:       True
+  location:      https://github.com/dbohdan/pandoc.git
 
 flag nightly
   Description:   Add '-nightly-COMPILEDATE' to the output of '--version'.
@@ -65,7 +51,7 @@ common common-executable
 executable pandoc
   import:          common-executable
   main-is:         pandoc.hs
-  hs-source-dirs:  src
+  hs-source-dirs:  src no-lua no-server
   buildable:       True
   -- Note: we always link to an exact version of pandoc, with the
   -- same version as this package:
@@ -73,35 +59,9 @@ executable pandoc
   other-modules:   PandocCLI.Lua
                  , PandocCLI.Server
 
-  if arch(wasm32)
-    hs-source-dirs: wasm
-    other-modules:  PandocWasm
-    cpp-options:    -DINCLUDE_WASM
-    build-depends:  aeson, containers, bytestring, skylighting, filepath, pandoc-lua-engine
-    ghc-options:    -optl-Wl,--export=__wasm_call_ctors,--export=hs_init_with_rtsopts,--export=malloc,--export=convert,--export=query
-  else
-    ghc-options: -threaded
+  ghc-options: -threaded
 
   if flag(nightly)
     cpp-options:    -DNIGHTLY
     build-depends:  template-haskell,
                     time
-  if flag(server)
-    build-depends:   pandoc-server >= 0.1.1 && < 0.2,
-                     wai-extra >= 3.0.24,
-                     warp,
-                     safe
-    hs-source-dirs:  server
-  else
-    hs-source-dirs:  no-server
-
-  if flag(lua)
-    build-depends:   pandoc-lua-engine >= 0.5.1 && < 0.6
-    hs-source-dirs:  lua
-  else
-    hs-source-dirs:  no-lua
-
-  if flag(repl)
-     build-depends:    hslua-cli       >= 1.4.1   && < 1.5,
-                       temporary         >= 1.1 && < 1.4
-     cpp-options:      -DREPL
