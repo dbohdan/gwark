@@ -68,7 +68,7 @@ import Text.Collate.Lang (Lang (..), parseLang)
 import Text.Pandoc.Filter (Filter (JSONFilter, LuaFilter), Environment (..),
                            applyFilters)
 import qualified Text.Pandoc.Format as Format
-import Text.Pandoc.PDF (makePDF)
+-- PDF support removed in lean fork; PDF output paths throw an error
 import Text.Pandoc.Scripting (ScriptingEngine (..), CustomComponents(..))
 import Text.Pandoc.SelfContained (makeSelfContained)
 import Text.Pandoc.Shared (tshow)
@@ -318,13 +318,9 @@ convertWithOpts' scriptingEngine istty datadir opts = do
       | format == "chunkedhtml" -> ZipOutput <$> f writerOptions doc
       | otherwise -> BinaryOutput <$> f writerOptions doc
     TextWriter f -> case outputPdfProgram outputSettings of
-      Just pdfProg | pdfOutput -> do
-              res <- makePDF pdfProg (optPdfEngineOpts opts) f
-                      writerOptions doc
-              case res of
-                   Right pdf -> return $ BinaryOutput pdf
-                   Left err' -> throwError $ PandocPDFError $
-                                   TL.toStrict (TE.decodeUtf8With TE.lenientDecode err')
+      Just _ | pdfOutput ->
+              throwError $ PandocPDFError
+                "PDF output is not supported in this lean fork."
 
       _ -> do
               let ensureNl t
