@@ -402,7 +402,6 @@ resolveVarsInOpt
     JSONFilter <$> resolveVars fp
   resolveVarsInFilter (LuaFilter fp) =
     LuaFilter <$> resolveVars fp
-  resolveVarsInFilter CiteprocFilter = return CiteprocFilter
 
 
 expandVars :: (PandocMonad m, MonadIO m)
@@ -646,10 +645,8 @@ doOpt (k,v) = do
     "filters" ->
       parseJSON v >>= \x -> return (\o -> o{ optFilters = optFilters o <> x })
     "citeproc" ->
-      parseJSON v >>= \x ->
-        if x
-           then return (\o -> o{ optFilters = CiteprocFilter : optFilters o })
-           else return id
+      parseJSON v >>= \(_ :: Bool) ->
+        return id  -- citeproc filter unsupported in lean fork
     "email-obfuscation" ->
       parseJSON v >>= \x -> return (\o -> o{ optEmailObfuscation = x })
     "identifier-prefix" ->

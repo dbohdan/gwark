@@ -1000,9 +1000,8 @@ options =
 
     , Option "C" ["citeproc"]
                  (NoArg
-                  (\opt -> return opt { optFilters =
-                      optFilters opt ++ [CiteprocFilter] }))
-                 "" -- "Process citations"
+                  (\opt -> return opt))  -- citeproc unsupported in lean fork
+                 "" -- "Process citations (no-op in lean fork)"
 
     , Option "" ["bibliography"]
                  (ReqArg

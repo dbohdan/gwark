@@ -28,7 +28,6 @@ import Text.Pandoc.Class (PandocMonad, findFileWithDataFallback, getVerbosity,
 import Text.Pandoc.Definition (Pandoc)
 import Text.Pandoc.Filter.Environment (Environment (..))
 import Text.Pandoc.Logging
-import Text.Pandoc.Citeproc (processCitations)
 import Text.Pandoc.Scripting (ScriptingEngine (engineApplyFilter))
 import qualified Text.Pandoc.Filter.JSON as JSONFilter
 import qualified Data.Text as T
@@ -37,10 +36,11 @@ import Control.Applicative ((<|>))
 import Control.Monad.Trans (MonadIO (liftIO))
 import Control.Monad (foldM, when)
 
--- | Type of filter and path to filter file.
+-- | Type of filter and path to filter file. The lean fork drops the
+-- built-in citeproc filter; declare it in JSON if you have a
+-- standalone citeproc filter binary.
 data Filter = LuaFilter FilePath
             | JSONFilter FilePath
-            | CiteprocFilter -- built-in citeproc
             deriving (Show, Generic, Eq)
 
 instance FromJSON Filter where
@@ -51,22 +51,18 @@ instance FromJSON Filter where
     let missingPath = fail $ "Expected 'path' for filter of type " ++ show ty
     let filterWithPath constr = maybe missingPath (return . constr . T.unpack)
     case ty of
-      "citeproc" -> return CiteprocFilter
       "lua"  -> filterWithPath LuaFilter fp
       "json" -> filterWithPath JSONFilter fp
       _      -> fail $ "Unknown filter type " ++ show (ty :: T.Text)) node
   <|>
   (withText "Filter" $ \t -> do
     let fp = T.unpack t
-    if fp == "citeproc"
-       then return CiteprocFilter
-       else return $
-         case takeExtension fp of
-           ".lua"  -> LuaFilter fp
-           _       -> JSONFilter fp) node
+    return $
+      case takeExtension fp of
+        ".lua"  -> LuaFilter fp
+        _       -> JSONFilter fp) node
 
 instance ToJSON Filter where
- toJSON CiteprocFilter = object [ "type" .= String "citeproc" ]
  toJSON (LuaFilter fp) = object [ "type" .= String "lua",
                                   "path" .= String (T.pack fp) ]
  toJSON (JSONFilter fp) = object [ "type" .= String "json",
@@ -88,8 +84,6 @@ applyFilters scrngin fenv filters args d = do
     withMessages f $ JSONFilter.apply fenv args f doc
   applyFilter doc (LuaFilter f)  =
     withMessages f $ engineApplyFilter scrngin fenv args f doc
-  applyFilter doc CiteprocFilter =
-    withMessages "citeproc" $ processCitations doc
   withMessages f action = do
     verbosity <- getVerbosity
     when (verbosity == INFO) $ report $ RunningFilter f
@@ -104,7 +98,6 @@ applyFilters scrngin fenv filters args d = do
 expandFilterPath :: (PandocMonad m, MonadIO m) => Filter -> m Filter
 expandFilterPath (LuaFilter fp) = LuaFilter <$> filterPath fp
 expandFilterPath (JSONFilter fp) = JSONFilter <$> filterPath fp
-expandFilterPath CiteprocFilter = return CiteprocFilter
 
 filterPath :: PandocMonad m => FilePath -> m FilePath
 filterPath fp = fromMaybe fp <$> findFileWithDataFallback "filters" fp

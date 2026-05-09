@@ -30,7 +30,6 @@ import System.IO (stderr)
 import qualified Text.Pandoc.UTF8 as UTF8
 import Text.Printf (printf)
 import Text.Pandoc.Shared (tshow)
-import Citeproc (CiteprocError, prettyCiteprocError)
 
 data PandocError = PandocIOError Text IOError
                  | PandocHttpError Text Text
@@ -62,7 +61,6 @@ data PandocError = PandocIOError Text IOError
                  | PandocUnknownReaderError Text
                  | PandocUnknownWriterError Text
                  | PandocUnsupportedExtensionError Text Text
-                 | PandocCiteprocError CiteprocError
                  | PandocBibliographyError Text Text
                  | PandocInputNotTextError Text
                  deriving (Show, Typeable, Generic)
@@ -139,8 +137,6 @@ renderError e =
       "The extension " <> ext <> " is not supported " <>
       "for " <> f <> ".\nUse --list-extensions=" <> f <> " to " <>
       "list supported extensions."
-    PandocCiteprocError e' ->
-      prettyCiteprocError e'
     PandocBibliographyError fp msg ->
       "Error reading bibliography file " <> fp <> ":\n" <> msg
     PandocInputNotTextError fp ->
@@ -171,7 +167,6 @@ handleError (Left e) =
       PandocUnknownReaderError{} -> 21
       PandocUnknownWriterError{} -> 22
       PandocUnsupportedExtensionError{} -> 23
-      PandocCiteprocError{} -> 24
       PandocBibliographyError{} -> 25
       PandocEpubSubdirectoryError{} -> 31
       PandocPDFError{} -> 43
