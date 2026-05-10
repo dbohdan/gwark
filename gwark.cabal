@@ -7,9 +7,9 @@ license-file:    COPYING.md
 copyright:       (c) 2006-2024 John MacFarlane
 author:          John MacFarlane <jgm@berkeley.edu>
 maintainer:      John MacFarlane <jgm@berkeley.edu>
-bug-reports:     https://github.com/jgm/pandoc/issues
+bug-reports:     https://github.com/dbohdan/gwark/issues
 stability:       alpha
-homepage:        https://pandoc.org
+homepage:        https://github.com/dbohdan/gwark
 category:        Text
 tested-with:     GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.3, GHC == 9.12.2
 synopsis:        Conversion between Gwerndown and HTML (lean fork)
@@ -59,7 +59,7 @@ extra-doc-files: changelog.md,
                  FORK.md
 source-repository head
   type:          git
-  location:      https://github.com/dbohdan/pandoc.git
+  location:      https://github.com/dbohdan/gwark.git
 
 flag embed_data_files
   Description:   Embed data files in binary for relocatable executable.

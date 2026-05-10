@@ -15,9 +15,12 @@ the Lua branch only when a change has to live there too.
 Don't push to `main`. New work goes on the baseline branch (or a
 feature branch off it).
 
-The remote `origin` is `dbohdan/pandoc`. The GitHub MCP is scoped
-to that repo only — reads or writes against `jgm/pandoc` will
-fail.
+The GitHub repository is `dbohdan/gwark` (renamed from
+`dbohdan/pandoc`; GitHub redirects the old URL). The git remote
+`origin` may still resolve under the old name in sandboxed
+environments — leave it alone if it works. The GitHub MCP is
+scoped to this repo only; reads or writes against `jgm/pandoc`
+will fail.
 
 ## Package layout
 

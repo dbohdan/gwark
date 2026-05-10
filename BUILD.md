@@ -54,9 +54,8 @@ but the only compiler the fork has been smoke-tested on is 9.6.6.
 ## 3. Clone and build
 
 ```
-git clone https://github.com/dbohdan/pandoc.git gwark
+git clone https://github.com/dbohdan/gwark.git
 cd gwark
-git checkout claude/trim-pandoc-gwern-7jEEj   # until the branch is merged
 cabal update
 cabal build all
 ```

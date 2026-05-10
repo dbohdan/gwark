@@ -7,9 +7,9 @@ license-file:    COPYING.md
 copyright:       (c) 2006-2024 John MacFarlane
 author:          John MacFarlane <jgm@berkeley.edu>
 maintainer:      John MacFarlane <jgm@berkeley.edu>
-bug-reports:     https://github.com/jgm/pandoc/issues
+bug-reports:     https://github.com/dbohdan/gwark/issues
 stability:       alpha
-homepage:        https://pandoc.org
+homepage:        https://github.com/dbohdan/gwark
 category:        Text
 synopsis:        Conversion between Gwerndown and HTML (lean fork CLI)
 description:     Command-line executable for the lean pandoc fork. Lua,
@@ -19,7 +19,7 @@ extra-source-files:
                  man/gwark.1
 source-repository head
   type:          git
-  location:      https://github.com/dbohdan/pandoc.git
+  location:      https://github.com/dbohdan/gwark.git
 
 flag nightly
   Description:   Add '-nightly-COMPILEDATE' to the output of '--version'.
