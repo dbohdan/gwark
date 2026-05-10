@@ -26,7 +26,6 @@ module Text.Pandoc.Readers
     Reader (..)
   , readers
   , readMarkdown
-  , readLaTeX
   , readHtml
   , readNative
   , readJSON
@@ -48,7 +47,6 @@ import qualified Text.Pandoc.Format as Format
 import Text.Pandoc.Options
 import Text.Pandoc.Readers.Markdown
 import Text.Pandoc.Readers.HTML (readHtml)
-import Text.Pandoc.Readers.LaTeX
 import Text.Pandoc.Readers.Native
 import qualified Text.Pandoc.UTF8 as UTF8
 import Text.Pandoc.Sources (ToSources(..), sourcesToText)
@@ -69,7 +67,6 @@ readers = [("native"             , TextReader readNative)
           ,("markdown_github"    , TextReader readMarkdown)
           ,("markdown_mmd"       , TextReader readMarkdown)
           ,("html"               , TextReader readHtml)
-          ,("latex"              , TextReader readLaTeX)
           ]
 
 -- | Retrieve reader, extensions based on format spec (format+extensions).
