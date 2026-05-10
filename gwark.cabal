@@ -54,9 +54,7 @@ data-files:
                  MANUAL.txt, COPYRIGHT
 extra-doc-files: changelog.md,
                  AUTHORS.md,
-                 INSTALL.md,
                  README.md,
-                 CONTRIBUTING.md,
                  BUGS,
                  FORK.md
 source-repository head
