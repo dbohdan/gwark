@@ -127,20 +127,12 @@ header:
 :   Specify input format.  *FORMAT* can be:
 
     ::: {#input-formats}
-    - `commonmark` ([CommonMark] Markdown; handled by the
-      Markdown reader with appropriate extensions)
-    - `commonmark_x` ([CommonMark] with extensions)
-    - `gfm` ([GitHub-Flavored Markdown]; alias for
-      `commonmark` with the GFM extension set)
     - `html` ([HTML])
     - `json` (JSON version of native AST)
     - `latex` ([LaTeX]; stripped reader, retained only to
       support the Markdown reader's `+latex_macros` and
       `+raw_tex` extensions)
     - `markdown` ([Gwerndown])
-    - `markdown_mmd` ([MultiMarkdown])
-    - `markdown_phpextra` ([PHP Markdown Extra])
-    - `markdown_strict` (original unextended [Markdown])
     - `native` (native Haskell)
     :::
 
@@ -157,18 +149,10 @@ header:
     ::: {#output-formats}
     - `chunkedhtml` (zip archive of multiple linked HTML files;
       see [Chunked HTML] below)
-    - `commonmark` ([CommonMark] Markdown; handled by the
-      Markdown writer with appropriate extensions)
-    - `commonmark_x` ([CommonMark] with extensions)
-    - `gfm` ([GitHub-Flavored Markdown]; alias for
-      `commonmark` with the GFM extension set)
     - `html` or `html5` ([HTML], i.e. [HTML5]/XHTML [polyglot markup])
     - `html4` ([XHTML] 1.0 Transitional)
     - `json` (JSON version of native AST)
     - `markdown` ([Gwerndown])
-    - `markdown_mmd` ([MultiMarkdown])
-    - `markdown_phpextra` ([PHP Markdown Extra])
-    - `markdown_strict` (original unextended [Markdown])
     - `markua` ([Markua])
     - `native` (native Haskell)
     - `plain` (plain text)

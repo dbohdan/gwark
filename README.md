@@ -25,11 +25,6 @@ for use with Hakyll-based static site builds (originally for
   CLI's `--filter` option.
 - The CLI executable **`gwark`** (renamed from `pandoc`).
 
-The Markdown sibling identifiers — `markdown_strict`,
-`markdown_mmd`, `markdown_phpextra`, `commonmark`,
-`commonmark_x`, `gfm` — are kept under their upstream names and
-go through the same Markdown reader/writer.
-
 ## What gwark does **not** ship
 
 - The Lua scripting engine or `--lua-filter` (a [provisional Lua

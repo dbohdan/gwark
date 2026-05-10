@@ -27,11 +27,7 @@ module Text.Pandoc.Extensions ( Extension(..)
                               , getDefaultExtensions
                               , getAllExtensions
                               , pandocExtensions
-                              , plainExtensions
-                              , strictExtensions
-                              , phpMarkdownExtraExtensions
-                              , githubMarkdownExtensions
-                              , multimarkdownExtensions )
+                              , plainExtensions )
 where
 import Data.Data (Data)
 import qualified Data.Text as T
@@ -281,94 +277,8 @@ plainExtensions = extensionsFromList
   , Ext_strikeout
   ]
 
--- | Extensions to be used with PHP Markdown Extra.
-phpMarkdownExtraExtensions :: Extensions
-phpMarkdownExtraExtensions = extensionsFromList
-  [ Ext_footnotes
-  , Ext_pipe_tables
-  , Ext_raw_html
-  , Ext_markdown_attribute
-  , Ext_fenced_code_blocks
-  , Ext_definition_lists
-  , Ext_intraword_underscores
-  , Ext_header_attributes
-  , Ext_link_attributes
-  , Ext_abbreviations
-  , Ext_shortcut_reference_links
-  , Ext_spaced_reference_links
-  ]
-
--- | Extensions to be used with github-flavored markdown.
-githubMarkdownExtensions :: Extensions
-githubMarkdownExtensions = extensionsFromList
-  [ Ext_pipe_tables
-  , Ext_raw_html
-  , Ext_auto_identifiers
-  , Ext_gfm_auto_identifiers
-  , Ext_autolink_bare_uris
-  , Ext_strikeout
-  , Ext_task_lists
-  , Ext_emoji
-  , Ext_fenced_code_blocks
-  , Ext_backtick_code_blocks
-  , Ext_footnotes
-  , Ext_alerts
-  ]
-
--- | Extensions to be used with multimarkdown.
-multimarkdownExtensions :: Extensions
-multimarkdownExtensions = extensionsFromList
-  [ Ext_pipe_tables
-  , Ext_raw_html
-  , Ext_markdown_attribute
-  , Ext_mmd_link_attributes
-  -- , Ext_raw_tex
-  -- Note: MMD's raw TeX syntax requires raw TeX to be
-  -- enclosed in HTML comment
-  , Ext_tex_math_double_backslash
-  , Ext_tex_math_dollars
-  , Ext_intraword_underscores
-  , Ext_mmd_title_block
-  , Ext_footnotes
-  , Ext_definition_lists
-  , Ext_all_symbols_escapable
-  , Ext_implicit_header_references
-  , Ext_shortcut_reference_links
-  , Ext_auto_identifiers
-  , Ext_mmd_header_identifiers
-  , Ext_implicit_figures
-  , Ext_short_subsuperscripts
-  , Ext_subscript
-  , Ext_superscript
-  , Ext_backtick_code_blocks
-  , Ext_spaced_reference_links
-  -- So far only in dev version of mmd:
-  , Ext_raw_attribute
-  ]
-
--- | Language extensions to be used with strict markdown.
-strictExtensions :: Extensions
-strictExtensions = extensionsFromList
-  [ Ext_raw_html
-  , Ext_shortcut_reference_links
-  , Ext_spaced_reference_links
-  ]
-
 -- | Default extensions from format-describing string.
 getDefaultExtensions :: T.Text -> Extensions
-getDefaultExtensions "markdown_strict"   = strictExtensions
-getDefaultExtensions "markdown_phpextra" = phpMarkdownExtraExtensions
-getDefaultExtensions "markdown_mmd"      = multimarkdownExtensions
-getDefaultExtensions "markdown_github"   = githubMarkdownExtensions <>
-  extensionsFromList
-    [ Ext_all_symbols_escapable
-    , Ext_backtick_code_blocks
-    , Ext_fenced_code_blocks
-    , Ext_space_in_atx_header
-    , Ext_intraword_underscores
-    , Ext_lists_without_preceding_blankline
-    , Ext_shortcut_reference_links
-    ]
 getDefaultExtensions "markdown"          = pandocExtensions
 getDefaultExtensions "ipynb"             =
   extensionsFromList
@@ -392,45 +302,6 @@ getDefaultExtensions "muse"            = extensionsFromList
                                            [Ext_amuse,
                                             Ext_auto_identifiers]
 getDefaultExtensions "plain"           = plainExtensions
-getDefaultExtensions "gfm"             = extensionsFromList
-  [ Ext_pipe_tables
-  , Ext_raw_html
-  , Ext_auto_identifiers
-  , Ext_gfm_auto_identifiers
-  , Ext_autolink_bare_uris
-  , Ext_strikeout
-  , Ext_task_lists
-  , Ext_emoji
-  , Ext_yaml_metadata_block
-  , Ext_footnotes
-  , Ext_tex_math_dollars
-  , Ext_tex_math_gfm
-  , Ext_alerts
-  ]
-getDefaultExtensions "commonmark"      = extensionsFromList
-                                          [Ext_raw_html]
-getDefaultExtensions "commonmark_x"    = extensionsFromList
-  [ Ext_pipe_tables
-  , Ext_raw_html
-  , Ext_gfm_auto_identifiers
-  , Ext_strikeout
-  , Ext_task_lists
-  , Ext_emoji
-  , Ext_smart
-  , Ext_tex_math_dollars
-  , Ext_superscript
-  , Ext_subscript
-  , Ext_definition_lists
-  , Ext_footnotes
-  , Ext_fancy_lists
-  , Ext_fenced_divs
-  , Ext_bracketed_spans
-  , Ext_raw_attribute
-  , Ext_implicit_header_references
-  , Ext_attributes
-  , Ext_alerts
-  , Ext_yaml_metadata_block
-  ]
 getDefaultExtensions "org"             = extensionsFromList
                                           [Ext_citations,
                                            Ext_special_strings,
@@ -523,10 +394,6 @@ getAllExtensions f = universalExtensions <> getAll f
        , Ext_wikilinks_title_before_pipe
        , Ext_alerts
        ]
-  getAll "markdown_strict"   = allMarkdownExtensions
-  getAll "markdown_phpextra" = allMarkdownExtensions
-  getAll "markdown_mmd"      = allMarkdownExtensions
-  getAll "markdown_github"   = allMarkdownExtensions
   getAll "markdown"          = allMarkdownExtensions
   getAll "ipynb"             = allMarkdownExtensions <> extensionsFromList
     [ Ext_raw_markdown ]
@@ -548,40 +415,6 @@ getAllExtensions f = universalExtensions <> getAll f
     [ Ext_amuse ]
   getAll "asciidoc"        = autoIdExtensions
   getAll "plain"           = allMarkdownExtensions
-  getAll "gfm"             = getAll "commonmark"
-  getAll "commonmark"      =
-    extensionsFromList
-    [ Ext_gfm_auto_identifiers
-    , Ext_ascii_identifiers
-    , Ext_pipe_tables
-    , Ext_autolink_bare_uris
-    , Ext_strikeout
-    , Ext_task_lists
-    , Ext_emoji
-    , Ext_raw_html
-    , Ext_alerts
-    , Ext_implicit_figures
-    , Ext_hard_line_breaks
-    , Ext_smart
-    , Ext_tex_math_dollars
-    , Ext_tex_math_gfm
-    , Ext_superscript
-    , Ext_subscript
-    , Ext_definition_lists
-    , Ext_footnotes
-    , Ext_fancy_lists
-    , Ext_fenced_divs
-    , Ext_bracketed_spans
-    , Ext_raw_attribute
-    , Ext_implicit_header_references
-    , Ext_attributes
-    , Ext_sourcepos
-    , Ext_wikilinks_title_after_pipe
-    , Ext_wikilinks_title_before_pipe
-    , Ext_yaml_metadata_block
-    , Ext_rebase_relative_paths
-    ]
-  getAll "commonmark_x"    = getAll "commonmark"
   getAll "org"             = autoIdExtensions <>
     extensionsFromList
     [ Ext_citations

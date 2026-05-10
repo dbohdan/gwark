@@ -62,10 +62,6 @@ writers = [
   ,("html5"             , TextWriter writeHtml5String)
   ,("chunkedhtml"       , ByteStringWriter writeChunkedHTML)
   ,("markdown"          , TextWriter writeMarkdown)
-  ,("markdown_strict"   , TextWriter writeMarkdown)
-  ,("markdown_phpextra" , TextWriter writeMarkdown)
-  ,("markdown_github"   , TextWriter writeMarkdown)
-  ,("markdown_mmd"      , TextWriter writeMarkdown)
   ,("markua"            , TextWriter writeMarkua)
   ,("plain"             , TextWriter writePlain)
   ]

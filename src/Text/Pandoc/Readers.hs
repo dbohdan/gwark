@@ -62,10 +62,6 @@ readers :: PandocMonad m => [(Text, Reader m)]
 readers = [("native"             , TextReader readNative)
           ,("json"               , TextReader readJSON)
           ,("markdown"           , TextReader readMarkdown)
-          ,("markdown_strict"    , TextReader readMarkdown)
-          ,("markdown_phpextra"  , TextReader readMarkdown)
-          ,("markdown_github"    , TextReader readMarkdown)
-          ,("markdown_mmd"       , TextReader readMarkdown)
           ,("html"               , TextReader readHtml)
           ]
 

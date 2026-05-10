@@ -56,9 +56,13 @@ The Markdown dialect that pandoc upstream calls "Pandoc's
 Markdown" is rebranded **Gwerndown** in user-facing prose
 (README, MANUAL.md, the man page, version banner, cabal
 synopsis). The CLI format identifier is unchanged: it's still
-`gwark -f markdown -t markdown`. Sibling identifiers
-(`markdown_strict`, `markdown_mmd`, `markdown_phpextra`,
-`commonmark`, `commonmark_x`, `gfm`) keep their upstream names.
+`gwark -f markdown -t markdown`. The upstream Markdown sibling
+identifiers (`markdown_strict`, `markdown_mmd`,
+`markdown_phpextra`, `markdown_github`, `commonmark`,
+`commonmark_x`, `gfm`) were dropped — Gwern's pipeline never
+references them, and each was just a registry entry routing
+through `readMarkdown` / `writeMarkdown` with a different
+default extension set.
 
 Lean-fork philosophy: **no backwards-compatibility shims**. If
 something is removed, downstream code either adapts or breaks.
