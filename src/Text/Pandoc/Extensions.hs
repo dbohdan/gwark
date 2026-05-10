@@ -210,7 +210,7 @@ disableExtensions (Extensions base) (Extensions remove) = Extensions $
   -- keep only those extensions that are in `base` but not in `remove`.
   base `Set.difference` remove
 
--- | Extensions to be used with pandoc-flavored markdown.
+-- | Extensions to be used with Gwerndown.
 pandocExtensions :: Extensions
 pandocExtensions = extensionsFromList
   [ Ext_footnotes

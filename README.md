@@ -3,11 +3,11 @@
 This is a stripped-down fork of [pandoc](https://github.com/jgm/pandoc),
 maintained for use with Hakyll-based static site builds (originally for
 [Gwern.net](https://gwern.net)). It supports a single workflow:
-**Pandoc Markdown ↔ HTML conversion with JSON filters**.
+**Gwerndown ↔ HTML conversion with JSON filters**.
 
 It still ships:
 
-- the Pandoc Markdown reader (full classical extension set, including
+- the Gwerndown reader (full classical extension set, including
   `+latex_macros` and `+raw_tex`)
 - the HTML reader
 - the HTML5 writer (HTML4 also)
@@ -309,8 +309,8 @@ expect perfect conversions between every format and every other. Pandoc
 attempts to preserve the structural elements of a document, but not
 formatting details such as margin size. And some document elements, such
 as complex tables, may not fit into pandoc’s simple document model.
-While conversions from pandoc’s Markdown to all formats aspire to be
-perfect, conversions from formats more expressive than pandoc’s Markdown
+While conversions from Gwerndown to all formats aspire to be
+perfect, conversions from formats more expressive than Gwerndown
 can be expected to be lossy.
 
 ## Installing
@@ -321,7 +321,7 @@ Here’s [how to install pandoc](INSTALL.md).
 
 Pandoc’s website contains a full [User’s
 Guide](https://pandoc.org/MANUAL.html). It is also available
-[here](MANUAL.md) as pandoc-flavored Markdown. The website also
+[here](MANUAL.md) as Gwerndown. The website also
 contains some [examples of the use of
 pandoc](https://pandoc.org/demos.html), a limited [online
 demo](https://pandoc.org/try), and a [WebAssembly-based online

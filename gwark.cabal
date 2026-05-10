@@ -12,11 +12,11 @@ stability:       alpha
 homepage:        https://pandoc.org
 category:        Text
 tested-with:     GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.3, GHC == 9.12.2
-synopsis:        Conversion between Pandoc Markdown and HTML (lean fork)
+synopsis:        Conversion between Gwerndown and HTML (lean fork)
 description:     Lean fork of pandoc, reduced to the formats needed by
                  Hakyll-based static site builds. Supports:
                  .
-                 - the Pandoc Markdown reader (full classical extension set,
+                 - the Gwerndown reader (full classical extension set,
                    including +latex_macros)
                  - the HTML reader
                  - the HTML5 writer (HTML4 also)

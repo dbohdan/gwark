@@ -41,12 +41,21 @@ Hard-forked from upstream commit `12051ec` (release 3.9.0.2). The
 cherry-picks.
 
 Removed (Phases 1–9): every reader and writer except Markdown
-(Pandoc), HTML, HTML5/HTML4 writer, Markdown writer, plain
-writer, Markua writer, native (JSON). The LaTeX reader is kept in
-stripped form **only** for the Markdown reader's `+latex_macros`
-and `+raw_tex` extensions. Citeproc is gone. `pandoc-server` is
-gone. PDF output is gone. The CommonMark reader is gone — its
-replacement is `readMarkdown` with extension flags.
+(Gwerndown — see below), HTML, HTML5/HTML4 writer, Markdown
+writer, plain writer, Markua writer, native (JSON). The LaTeX
+reader is kept in stripped form **only** for the Markdown
+reader's `+latex_macros` and `+raw_tex` extensions. Citeproc is
+gone. `pandoc-server` is gone. PDF output is gone. The
+CommonMark reader is gone — its replacement is `readMarkdown`
+with extension flags.
+
+The Markdown dialect that pandoc upstream calls "Pandoc's
+Markdown" is rebranded **Gwerndown** in user-facing prose
+(README, MANUAL.md, the man page, version banner, cabal
+synopsis). The CLI format identifier is unchanged: it's still
+`gwark -f markdown -t markdown`. Sibling identifiers
+(`markdown_strict`, `markdown_mmd`, `markdown_phpextra`,
+`commonmark`, `commonmark_x`, `gfm`) keep their upstream names.
 
 Lean-fork philosophy: **no backwards-compatibility shims**. If
 something is removed, downstream code either adapts or breaks.

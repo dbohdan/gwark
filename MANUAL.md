@@ -20,13 +20,13 @@ date: 2026-05-10
 
 gwark is a lean fork of [pandoc](https://pandoc.org), reduced
 to the formats needed by Hakyll-based static site builds.
-It is a [Haskell] library for converting between Pandoc Markdown
+It is a [Haskell] library for converting between Gwerndown
 and HTML, with a few neighboring writers, and a command-line tool
 that uses this library.
 
 The fork supports:
 
-- the **Pandoc Markdown reader** (full classical extension set,
+- the **Gwerndown reader** (full classical extension set,
   including `+latex_macros` and `+raw_tex`)
 - the **HTML reader**
 - the **HTML5 writer** (and HTML4)
@@ -42,7 +42,7 @@ The full lists of input and output formats are under
 
 gwark's enhanced version of Markdown includes syntax for
 [tables], [definition lists], [metadata blocks], [footnotes],
-[math], and much more. See below under [Pandoc's Markdown].
+[math], and much more. See below under [Gwerndown].
 
 gwark has a modular design: it consists of a set of readers,
 which parse text in a given format and produce a native
@@ -137,7 +137,7 @@ header:
     - `latex` ([LaTeX]; stripped reader, retained only to
       support the Markdown reader's `+latex_macros` and
       `+raw_tex` extensions)
-    - `markdown` ([Pandoc's Markdown])
+    - `markdown` ([Gwerndown])
     - `markdown_mmd` ([MultiMarkdown])
     - `markdown_phpextra` ([PHP Markdown Extra])
     - `markdown_strict` (original unextended [Markdown])
@@ -165,7 +165,7 @@ header:
     - `html` or `html5` ([HTML], i.e. [HTML5]/XHTML [polyglot markup])
     - `html4` ([XHTML] 1.0 Transitional)
     - `json` (JSON version of native AST)
-    - `markdown` ([Pandoc's Markdown])
+    - `markdown` ([Gwerndown])
     - `markdown_mmd` ([MultiMarkdown])
     - `markdown_phpextra` ([PHP Markdown Extra])
     - `markdown_strict` (original unextended [Markdown])
@@ -276,7 +276,7 @@ header:
 :   List supported extensions for *FORMAT*, one per line, preceded
     by a `+` or `-` indicating whether it is enabled by default
     in *FORMAT*. If *FORMAT* is not specified, defaults for
-    pandoc's Markdown are given.
+    Gwerndown are given.
 
 `--list-highlight-languages`
 
@@ -435,11 +435,11 @@ header:
     JSON input and output.  The name of the output format will be
     passed to the filter as the first argument.  Hence,
 
-        pandoc --filter ./caps.py -t latex
+        gwark --filter ./caps -t html5
 
     is equivalent to
 
-        pandoc -t json | ./caps.py latex | pandoc -f json -t latex
+        gwark -t json | ./caps html5 | gwark -f json -t html5
 
     The latter form may be useful for debugging filters.
 
@@ -2289,7 +2289,7 @@ Markdown without footnotes or pipe tables.
 
 The Markdown reader and writer make by far the most use of extensions.
 Extensions only used by them are therefore covered in the
-section [Pandoc's Markdown] below (see [Markdown variants] for
+section [Gwerndown] below (see [Markdown variants] for
 `commonmark` and `gfm`). In the following, extensions that also work
 for other formats are covered.
 
@@ -2419,7 +2419,7 @@ The extensions [`tex_math_dollars`](#extension-tex_math_dollars),
 [`tex_math_gfm`](#extension-tex_math_gfm),
 [`tex_math_single_backslash`](#extension-tex_math_single_backslash), and
 [`tex_math_double_backslash`](#extension-tex_math_double_backslash)
-are described in the section about Pandoc's Markdown.
+are described in the section about Gwerndown.
 
 However, they can also be used with HTML input. This is handy for
 reading web pages formatted using MathJax, for example.
@@ -2427,7 +2427,7 @@ reading web pages formatted using MathJax, for example.
 ## Raw HTML/TeX
 
 The following extensions are described in more detail in
-their respective sections of [Pandoc's Markdown]:
+their respective sections of [Gwerndown]:
 
 - [`raw_html`](#extension-raw_html) allows HTML elements which
   are not representable in pandoc's AST to be parsed as raw HTML.
@@ -2462,7 +2462,7 @@ their respective sections of [Pandoc's Markdown]:
   If you want them to be parsed as raw HTML, use
   `-f html-native_spans+raw_html`.  If you want to drop all
   `div`s and `span`s when converting HTML to Markdown, you
-  can use `pandoc -f html-native_divs-native_spans -t markdown`.
+  can use `gwark -f html-native_divs-native_spans -t markdown`.
 
 ## Literate Haskell support
 
@@ -2511,12 +2511,12 @@ This means that
 
 Examples:
 
-    pandoc -f markdown+lhs -t html
+    gwark -f markdown+lhs -t html
 
 reads literate Haskell source formatted with Markdown conventions and writes
 ordinary HTML (without bird tracks).
 
-    pandoc -f markdown+lhs -t html+lhs
+    gwark -f markdown+lhs -t html+lhs
 
 writes HTML with the Haskell code in bird tracks, so it can be copied
 and pasted as literate Haskell source.
@@ -2540,15 +2540,24 @@ input formats
 output formats
 :  `html`
 
-# Pandoc's Markdown
+# Gwerndown
 
-Pandoc understands an extended and slightly revised version of
-John Gruber's [Markdown] syntax.  This document explains the syntax,
-noting differences from original Markdown. Except where noted, these
-differences can be suppressed by using the `markdown_strict` format instead
-of `markdown`. Extensions can be enabled or disabled to specify the
-behavior more granularly. They are described in the following. See also
-[Extensions] above, for extensions that work also on other formats.
+**Gwerndown** is gwark's name for its Markdown dialect: the
+extended and slightly revised version of John Gruber's
+[Markdown] syntax that pandoc has historically called "Pandoc's
+Markdown". The dialect is the same as upstream's at fork time
+(release 3.9.0.2); the rename signals that gwark may diverge
+going forward. The CLI format identifier remains `markdown`; the
+strict / commonmark / gfm / multimarkdown / php-markdown-extra
+sibling names are unchanged.
+
+This document explains the syntax, noting differences from
+original Markdown. Except where noted, these differences can be
+suppressed by using the `markdown_strict` format instead of
+`markdown`. Extensions can be enabled or disabled to specify the
+behavior more granularly. They are described in the following.
+See also [Extensions] above, for extensions that work also on
+other formats.
 
 ## Philosophy
 
@@ -4413,7 +4422,7 @@ followed immediately by attributes:
 
 ### Extension: `footnotes` ###
 
-Pandoc's Markdown allows footnotes, using the following syntax:
+Gwerndown allows footnotes, using the following syntax:
 
     Here is a footnote reference,[^1] and another.[^longnote]
 
@@ -4860,7 +4869,7 @@ default and cannot be disabled.
 
 # Chunked HTML
 
-`pandoc -t chunkedhtml` will produce a zip archive of linked
+`gwark -t chunkedhtml` will produce a zip archive of linked
 HTML files, one for each section of the original document.
 Internal links will automatically be adjusted to point to
 the right place, images linked to under the working directory

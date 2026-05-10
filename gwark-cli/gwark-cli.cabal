@@ -11,7 +11,7 @@ bug-reports:     https://github.com/jgm/pandoc/issues
 stability:       alpha
 homepage:        https://pandoc.org
 category:        Text
-synopsis:        Conversion between Pandoc Markdown and HTML (lean fork CLI)
+synopsis:        Conversion between Gwerndown and HTML (lean fork CLI)
 description:     Command-line executable for the lean pandoc fork. Lua,
                  server, and repl support are unconditionally absent;
                  the flags from upstream are removed.

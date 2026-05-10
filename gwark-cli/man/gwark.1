@@ -13,11 +13,11 @@ gwark - lean pandoc fork (Markdown <-> HTML)
 .SH DESCRIPTION
 gwark is a lean fork of pandoc, reduced to the formats needed
 by Hakyll\-based static site builds.
-It is a Haskell library for converting between Pandoc Markdown
+It is a Haskell library for converting between Gwerndown
 and HTML, with a few neighboring writers, and a command\-line
 tool that uses this library.
 .PP
-The fork supports the Pandoc Markdown reader (full classical
+The fork supports the Gwerndown reader (full classical
 extension set, including \f[CR]+latex_macros\f[R] and
 \f[CR]+raw_tex\f[R]); the HTML reader; the HTML5 (and HTML4)
 writer; the Markdown, plain, and Markua writers; the chunked\-HTML
@@ -31,7 +31,7 @@ For the full lists of input and output formats, see the
 gwark\(cqs enhanced version of Markdown includes syntax for
 tables, definition lists, metadata blocks, footnotes, math, and
 much more.
-See below under Pandoc\(cqs Markdown.
+See below under Gwerndown.
 .PP
 gwark has a modular design: it consists of a set of readers,
 which parse text in a given format and produce a native
@@ -48,7 +48,7 @@ For output to a file, use the \f[CR]\-o\f[R]/\f[CR]\-\-output\f[R]
 option:
 .IP
 .EX
-pandoc \-o output.html input.txt
+gwark \-o output.html input.txt
 .EE
 .PP
 By default, pandoc produces a document fragment.
@@ -57,7 +57,7 @@ To produce a standalone document (e.g.\ a valid HTML file including
 \f[CR]\-\-standalone\f[R] flag:
 .IP
 .EX
-pandoc \-s \-o output.html input.txt
+gwark \-s \-o output.html input.txt
 .EE
 .PP
 For more information on how standalone documents are produced, see
@@ -75,19 +75,19 @@ Thus, to convert \f[CR]hello.txt\f[R] from Markdown to LaTeX, you could
 type:
 .IP
 .EX
-pandoc \-f markdown \-t latex hello.txt
+gwark \-f markdown \-t html hello.md
 .EE
 .PP
 To convert \f[CR]hello.html\f[R] from HTML to Markdown:
 .IP
 .EX
-pandoc \-f html \-t markdown hello.html
+gwark \-f html \-t markdown hello.html
 .EE
 .PP
 Supported input and output formats are listed below under Options (see
 \f[CR]\-f\f[R] for input formats and \f[CR]\-t\f[R] for output formats).
-You can also use \f[CR]pandoc \-\-list\-input\-formats\f[R] and
-\f[CR]pandoc \-\-list\-output\-formats\f[R] to print lists of supported
+You can also use \f[CR]gwark \-\-list\-input\-formats\f[R] and
+\f[CR]gwark \-\-list\-output\-formats\f[R] to print lists of supported
 formats.
 .PP
 If the input or output format is not specified explicitly, pandoc will
@@ -95,7 +95,7 @@ attempt to guess it from the extensions of the filenames.
 Thus, for example,
 .IP
 .EX
-pandoc \-o hello.tex hello.txt
+gwark \-o hello.tex hello.txt
 .EE
 .PP
 will convert \f[CR]hello.txt\f[R] from Markdown to LaTeX.
@@ -123,14 +123,14 @@ Instead of an input file, an absolute URI may be given.
 In this case pandoc will fetch the content using HTTP:
 .IP
 .EX
-pandoc \-f html \-t markdown https://www.fsf.org
+gwark \-f html \-t markdown https://www.fsf.org
 .EE
 .PP
 It is possible to supply a custom User\-Agent string or other header
 when requesting a document from a URL:
 .IP
 .EX
-pandoc \-f html \-t markdown \-\-request\-header User\-Agent:\(dqMozilla/5.0\(dq \(rs
+gwark \-f html \-t markdown \-\-request\-header User\-Agent:\(dqMozilla/5.0\(dq \(rs
   https://www.fsf.org
 .EE
 .SH OPTIONS
@@ -157,7 +157,7 @@ Markdown reader with appropriate extensions)
 support the Markdown reader\(cqs \f[CR]+latex_macros\f[R] and
 \f[CR]+raw_tex\f[R] extensions)
 .IP \(bu 2
-\f[CR]markdown\f[R] (Pandoc\(cqs Markdown)
+\f[CR]markdown\f[R] (Gwerndown)
 .IP \(bu 2
 \f[CR]markdown_mmd\f[R] (MultiMarkdown)
 .IP \(bu 2
@@ -197,7 +197,7 @@ polyglot markup)
 .IP \(bu 2
 \f[CR]json\f[R] (JSON version of native AST)
 .IP \(bu 2
-\f[CR]markdown\f[R] (Pandoc\(cqs Markdown)
+\f[CR]markdown\f[R] (Gwerndown)
 .IP \(bu 2
 \f[CR]markdown_mmd\f[R] (MultiMarkdown)
 .IP \(bu 2
@@ -242,7 +242,7 @@ will be used (for backwards compatibility).
 On Windows the default user data directory is
 \f[CR]%APPDATA%\(rspandoc\f[R].
 You can find the default user data directory on your system by looking
-at the output of \f[CR]pandoc \-\-version\f[R].
+at the output of \f[CR]gwark \-\-version\f[R].
 Data files placed in this directory (for example,
 \f[CR]reference.odt\f[R], \f[CR]reference.docx\f[R],
 \f[CR]epub.css\f[R], \f[CR]templates\f[R]) will override pandoc\(cqs
@@ -272,7 +272,7 @@ To enable bash completion with pandoc, add this to your
 .RS
 .IP
 .EX
-eval \(dq$(pandoc \-\-bash\-completion)\(dq
+eval \(dq$(gwark \-\-bash\-completion)\(dq
 .EE
 .RE
 .TP
@@ -300,7 +300,7 @@ List supported output formats, one per line.
 List supported extensions for \f[I]FORMAT\f[R], one per line, preceded
 by a \f[CR]+\f[R] or \f[CR]\-\f[R] indicating whether it is enabled by
 default in \f[I]FORMAT\f[R].
-If \f[I]FORMAT\f[R] is not specified, defaults for pandoc\(cqs Markdown
+If \f[I]FORMAT\f[R] is not specified, defaults for Gwerndown
 are given.
 .TP
 \f[CR]\-\-list\-highlight\-languages\f[R]
@@ -378,13 +378,13 @@ Hence,
 .RS
 .IP
 .EX
-pandoc \-\-filter ./caps.py \-t latex
+gwark \-\-filter ./caps \-t html5
 .EE
 .PP
 is equivalent to
 .IP
 .EX
-pandoc \-t json | ./caps.py latex | pandoc \-f json \-t latex
+gwark \-t json | ./caps html5 | gwark \-f json \-t html5
 .EE
 .PP
 The latter form may be useful for debugging filters.
@@ -473,7 +473,7 @@ If this option is not specified, pandoc will read the data file
 \f[CR]abbreviations\f[R] from the user data directory or fall back on a
 system default.
 To see the system default, use
-\f[CR]pandoc \-\-print\-default\-data\-file=abbreviations\f[R].
+\f[CR]gwark \-\-print\-default\-data\-file=abbreviations\f[R].
 The only use pandoc makes of this list is in the Markdown reader.
 Strings found in this list will be followed by a nonbreaking space, and
 the period will not produce sentence\-ending space in formats like
@@ -972,7 +972,7 @@ If this is not found either, sensible defaults will be used.
 .PP
 To produce a custom \f[CR]reference.docx\f[R], first get a copy of the
 default \f[CR]reference.docx\f[R]:
-\f[CR]pandoc \-o custom\-reference.docx \-\-print\-default\-data\-file reference.docx\f[R].
+\f[CR]gwark \-o custom\-reference.docx \-\-print\-default\-data\-file reference.docx\f[R].
 Then open \f[CR]custom\-reference.docx\f[R] in Word, modify the styles
 as you wish, and save the file.
 For best results, do not make changes to this file other than modifying
@@ -1074,7 +1074,7 @@ If this is not found either, sensible defaults will be used.
 .PP
 To produce a custom \f[CR]reference.odt\f[R], first get a copy of the
 default \f[CR]reference.odt\f[R]:
-\f[CR]pandoc \-o custom\-reference.odt \-\-print\-default\-data\-file reference.odt\f[R].
+\f[CR]gwark \-o custom\-reference.odt \-\-print\-default\-data\-file reference.odt\f[R].
 Then open \f[CR]custom\-reference.odt\f[R] in LibreOffice, modify the
 styles as you wish, and save the file.
 .RE
@@ -1114,7 +1114,7 @@ these criteria.
 check.)
 .PP
 You can also modify the default \f[CR]reference.pptx\f[R]: first run
-\f[CR]pandoc \-o custom\-reference.pptx \-\-print\-default\-data\-file reference.pptx\f[R],
+\f[CR]gwark \-o custom\-reference.pptx \-\-print\-default\-data\-file reference.pptx\f[R],
 and then modify \f[CR]custom\-reference.pptx\f[R] in MS PowerPoint
 (pandoc will use the layouts with the names listed above).
 .RE
@@ -1200,7 +1200,7 @@ embedded.
 .RS
 .IP
 .EX
-pandoc \-s \-\-gladtex input.md \-o myfile.htex
+gwark \-s \-\-gladtex input.md \-o myfile.htex
 gladtex \-d image_dir myfile.htex
 # produces myfile.html and images in image_dir
 .EE
@@ -1227,13 +1227,13 @@ Thus, for example,
 .RS
 .IP
 .EX
-pandoc \-\-ignore\-args \-o foo.html \-s foo.txt \-\- \-e latin1
+gwark \-\-ignore\-args \-o foo.html \-s foo.txt \-\- \-e latin1
 .EE
 .PP
 is equivalent to
 .IP
 .EX
-pandoc \-o foo.html \-s
+gwark \-o foo.html \-s
 .EE
 .RE
 .SH EXIT CODES
@@ -1329,8 +1329,8 @@ the user data directory and used from any directory.
 For example, one could create a file specifying defaults for writing
 letters, save it as \f[CR]letter.yaml\f[R] in the \f[CR]defaults\f[R]
 subdirectory of the user data directory, and then invoke these defaults
-from any directory using \f[CR]pandoc \-\-defaults letter\f[R] or
-\f[CR]pandoc \-dletter\f[R].
+from any directory using \f[CR]gwark \-\-defaults letter\f[R] or
+\f[CR]gwark \-dletter\f[R].
 .PP
 When multiple defaults are used, their contents will be combined.
 .PP
@@ -1655,7 +1655,7 @@ self\-standing document.
 To see the default template that is used, just type
 .IP
 .EX
-pandoc \-D *FORMAT*
+gwark \-D *FORMAT*
 .EE
 .PP
 where \f[I]FORMAT\f[R] is the name of the output format.
@@ -2203,10 +2203,10 @@ When using LaTeX for bidirectional documents, only the
 \f[CR]document\-css\f[R]
 Enables inclusion of most of the CSS in the \f[CR]styles.html\f[R]
 partial (have a look with
-\f[CR]pandoc \-\-print\-default\-data\-file=templates/styles.html\f[R]).
+\f[CR]gwark \-\-print\-default\-data\-file=templates/styles.html\f[R]).
 Unless you use \f[CR]\-\-css\f[R], this variable is set to
 \f[CR]true\f[R] by default.
-You can disable it with e.g.\ \f[CR]pandoc \-M document\-css=false\f[R].
+You can disable it with e.g.\ \f[CR]gwark \-M document\-css=false\f[R].
 .TP
 \f[CR]mainfont\f[R]
 sets the CSS \f[CR]font\-family\f[R] property on the \f[CR]html\f[R]
@@ -2365,7 +2365,7 @@ Markdown without footnotes or pipe tables.
 .PP
 The Markdown reader and writer make by far the most use of extensions.
 Extensions only used by them are therefore covered in the section
-Pandoc\(cqs Markdown below (see Markdown variants for
+Gwerndown below (see Markdown variants for
 \f[CR]commonmark\f[R] and \f[CR]gfm\f[R]).
 In the following, extensions that also work for other formats are
 covered.
@@ -2509,14 +2509,14 @@ Emojis are replaced by their names.
 The extensions \f[CR]tex_math_dollars\f[R], \f[CR]tex_math_gfm\f[R],
 \f[CR]tex_math_single_backslash\f[R], and
 \f[CR]tex_math_double_backslash\f[R] are described in the section about
-Pandoc\(cqs Markdown.
+Gwerndown.
 .PP
 However, they can also be used with HTML input.
 This is handy for reading web pages formatted using MathJax, for
 example.
 .SS Raw HTML/TeX
 The following extensions are described in more detail in their
-respective sections of Pandoc\(cqs Markdown:
+respective sections of Gwerndown:
 .IP \(bu 2
 \f[CR]raw_html\f[R] allows HTML elements which are not representable in
 pandoc\(cqs AST to be parsed as raw HTML.
@@ -2556,7 +2556,7 @@ If you want them to be parsed as raw HTML, use
 \f[CR]\-f html\-native_spans+raw_html\f[R].
 If you want to drop all \f[CR]div\f[R]s and \f[CR]span\f[R]s when
 converting HTML to Markdown, you can use
-\f[CR]pandoc \-f html\-native_divs\-native_spans \-t markdown\f[R].
+\f[CR]gwark \-f html\-native_divs\-native_spans \-t markdown\f[R].
 .SS Literate Haskell support
 .SS Extension: \f[CR]literate_haskell\f[R]
 Treat the document as literate Haskell source.
@@ -2607,14 +2607,14 @@ rendered with class \f[CR]literatehaskell\f[R] and bird tracks.
 Examples:
 .IP
 .EX
-pandoc \-f markdown+lhs \-t html
+gwark \-f markdown+lhs \-t html
 .EE
 .PP
 reads literate Haskell source formatted with Markdown conventions and
 writes ordinary HTML (without bird tracks).
 .IP
 .EX
-pandoc \-f markdown+lhs \-t html+lhs
+gwark \-f markdown+lhs \-t html+lhs
 .EE
 .PP
 writes HTML with the Haskell code in bird tracks, so it can be copied
@@ -2636,9 +2636,15 @@ input formats
 output formats
 \f[CR]docx\f[R], \f[CR]odt\f[R], \f[CR]opendocument\f[R],
 \f[CR]html\f[R], \f[CR]latex\f[R]
-.SH PANDOC\(cqS MARKDOWN
-Pandoc understands an extended and slightly revised version of John
-Gruber\(cqs Markdown syntax.
+.SH GWERNDOWN
+\f[B]Gwerndown\f[R] is gwark\(cqs name for its Markdown dialect:
+the extended and slightly revised version of John Gruber\(cqs
+Markdown syntax that pandoc has historically called \(lqPandoc\(cqs
+Markdown\(rq.
+The dialect is the same as upstream\(cqs at fork time (release
+3.9.0.2); the rename signals that gwark may diverge going forward.
+The CLI format identifier remains \f[CR]markdown\f[R].
+.PP
 This document explains the syntax, noting differences from original
 Markdown.
 Except where noted, these differences can be suppressed by using the
@@ -2971,7 +2977,7 @@ LaTeX, Docx, Ms, and PowerPoint.
 If highlighting is supported for your output format and language, then
 the code block above will appear highlighted, with numbered lines.
 (To see which languages are supported, type
-\f[CR]pandoc \-\-list\-highlight\-languages\f[R].)
+\f[CR]gwark \-\-list\-highlight\-languages\f[R].)
 Otherwise, the code block above will appear as follows:
 .IP
 .EX
@@ -4362,7 +4368,7 @@ a pagebreak:
 .PP
 The format name should match the target format name (see
 \f[CR]\-t/\-\-to\f[R], above, for a list, or use
-\f[CR]pandoc \-\-list\-output\-formats\f[R]).
+\f[CR]gwark \-\-list\-output\-formats\f[R]).
 Use \f[CR]openxml\f[R] for \f[CR]docx\f[R] output,
 \f[CR]opendocument\f[R] for \f[CR]odt\f[R] output, \f[CR]html5\f[R] for
 \f[CR]epub3\f[R] output, \f[CR]html4\f[R] for \f[CR]epub2\f[R] output,
@@ -4706,7 +4712,7 @@ immediately by attributes:
 .EE
 .SS Footnotes
 .SS Extension: \f[CR]footnotes\f[R]
-Pandoc\(cqs Markdown allows footnotes, using the following syntax:
+Gwerndown allows footnotes, using the following syntax:
 .IP
 .EX
 Here is a footnote reference,[\(ha1] and another.[\(halongnote]
@@ -5149,7 +5155,7 @@ To see which extensions are supported for a given format, and which are
 enabled by default, you can use the command
 .IP
 .EX
-pandoc \-\-list\-extensions=FORMAT
+gwark \-\-list\-extensions=FORMAT
 .EE
 .PP
 where \f[CR]FORMAT\f[R] is replaced with the name of the format.
@@ -5160,7 +5166,7 @@ default commonmark.
 So, for example, \f[CR]backtick_code_blocks\f[R] does not appear as an
 extension, since it is enabled by default and cannot be disabled.
 .SH CHUNKED HTML
-\f[CR]pandoc \-t chunkedhtml\f[R] will produce a zip archive of linked
+\f[CR]gwark \-t chunkedhtml\f[R] will produce a zip archive of linked
 HTML files, one for each section of the original document.
 Internal links will automatically be adjusted to point to the right
 place, images linked to under the working directory will be
@@ -5184,7 +5190,7 @@ The Haskell library skylighting is used for highlighting.
 Currently highlighting is supported only for HTML, EPUB, Docx, Ms, Man,
 Typst, and LaTeX/PDF output.
 To see a list of language names that pandoc will recognize, type
-\f[CR]pandoc \-\-list\-highlight\-languages\f[R].
+\f[CR]gwark \-\-list\-highlight\-languages\f[R].
 .PP
 The color scheme can be selected using the
 \f[CR]\-\-syntax\-highlighting\f[R] option.
@@ -5192,7 +5198,7 @@ The default color scheme is \f[CR]pygments\f[R], which imitates the
 default color scheme used by the Python library pygments (though
 pygments is not actually used to do the highlighting).
 To see a list of highlight styles, type
-\f[CR]pandoc \-\-list\-highlight\-styles\f[R].
+\f[CR]gwark \-\-list\-highlight\-styles\f[R].
 .PP
 If you are not satisfied with the predefined styles, you can use
 \f[CR]\-\-print\-highlight\-style\f[R] to generate a JSON
@@ -5201,13 +5207,13 @@ If you are not satisfied with the predefined styles, you can use
 To get a JSON version of the \f[CR]pygments\f[R] style, for example:
 .IP
 .EX
-pandoc \-o my.theme \-\-print\-highlight\-style pygments
+gwark \-o my.theme \-\-print\-highlight\-style pygments
 .EE
 .PP
 Then edit \f[CR]my.theme\f[R] and use it like this:
 .IP
 .EX
-pandoc \-\-syntax\-highlighting my.theme
+gwark \-\-syntax\-highlighting my.theme
 .EE
 .PP
 If you are not satisfied with the built\-in highlighting, or you want to
