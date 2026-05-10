@@ -38,10 +38,11 @@ The remainder of this file is the original upstream README, kept for
 reference. Many of the formats and features described below are not
 present in this fork.
 
-<!-- Do not edit the rest of this file.  It is generated automatically
-from README.template and MANUAL.txt via the command:
-pandoc --lua-filter tools/update-readme.lua README.template -o README.md
--->
+<!-- The rest of this file is the upstream pandoc README, kept
+verbatim for historical reference. Upstream regenerated it from
+README.template and MANUAL.txt via tools/update-readme.lua;
+those files have been removed in this fork. -->
+
 
 # Pandoc
 
@@ -320,7 +321,7 @@ Here’s [how to install pandoc](INSTALL.md).
 
 Pandoc’s website contains a full [User’s
 Guide](https://pandoc.org/MANUAL.html). It is also available
-[here](MANUAL.txt) as pandoc-flavored Markdown. The website also
+[here](MANUAL.md) as pandoc-flavored Markdown. The website also
 contains some [examples of the use of
 pandoc](https://pandoc.org/demos.html), a limited [online
 demo](https://pandoc.org/try), and a [WebAssembly-based online
