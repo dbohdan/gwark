@@ -59,13 +59,9 @@ readPandocWith ropt item =
   where
     reader ro t = case t of
         Html               -> readHtml ro
+        LaTeX              -> readLaTeX ro
         LiterateHaskell t' -> reader (addExt ro Ext_literate_haskell) t'
         Markdown           -> readMarkdown ro
-        -- NOTE: LaTeX is dispatched as a FileType but not handled
-        -- here. gwark on 'main' does not currently expose
-        -- 'readLaTeX'; the 'claude/gwark-trim' branch restores it
-        -- and re-adding the 'LaTeX -> readLaTeX ro' arm here once
-        -- that branch lands is a one-line follow-up.
         _                  -> error $
             "Hakyll.Web.readPandocWith: I don't know how to read a file of " ++
             "the type " ++ show t ++ " for: " ++ show (itemIdentifier item)
