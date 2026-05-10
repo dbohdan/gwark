@@ -30,9 +30,7 @@ for use with Hakyll-based static site builds (originally for
 
 ## What gwark does **not** ship
 
-- The Lua scripting engine or `--lua-filter` (a [provisional Lua
-  branch][lua-branch] adds filter support behind a cabal flag;
-  the standalone Lua REPL is not exposed even there).
+- The Lua scripting engine or `--lua-filter`.
 - Citeproc / built-in citation processing.
 - The `pandoc-server` HTTP API.
 - PDF output.
@@ -40,8 +38,6 @@ for use with Hakyll-based static site builds (originally for
   DocBook, JATS, …).
 - Any other writer (LaTeX, DOCX, EPUB, JATS, ConTeXt, RST, Org,
   Typst, asciidoc, slide formats, …).
-
-[lua-branch]: https://github.com/dbohdan/gwark/tree/gwark-lua
 
 The cabal package was renamed from `pandoc` to `gwark`; downstream
 consumers must update their `build-depends` accordingly.

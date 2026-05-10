@@ -5,15 +5,9 @@ Repository-level guidance for AI coding assistants working on the
 
 ## Branch model
 
-There are two long-lived development branches: a **baseline** (no
-Lua) and a **Lua branch** that adds Lua filter support behind a
-cabal flag. The Lua branch is provisional — it may or may not
-remain a permanent fixture of the repository, so default to
-landing changes on the baseline branch. Merge or cherry-pick into
-the Lua branch only when a change has to live there too.
-
-Don't push to `main`. New work goes on the baseline branch (or a
-feature branch off it).
+The development branch is `main`. Land changes there directly, or
+on a topical feature branch (typically `claude/<topic>`) that the
+user merges into `main`. There are no other long-lived branches.
 
 The GitHub repository is `dbohdan/gwark` (renamed from
 `dbohdan/pandoc`; GitHub redirects the old URL). The git remote
@@ -24,10 +18,8 @@ will fail.
 
 ## Package layout
 
-`cabal.project` always lists `.` (the `gwark` library — the
-package was renamed from `pandoc`) and `gwark-cli`. The Lua
-branch additionally lists `pandoc-lua-engine` (the upstream
-sibling package, repointed at `gwark`).
+`cabal.project` lists `.` (the `gwark` library — the package was
+renamed from `pandoc`) and `gwark-cli`.
 
 The CLI executable is named `gwark`. `cabal list-bin gwark` is
 ambiguous because it matches the library — always use
@@ -90,9 +82,8 @@ both streams must filter or `2>/dev/null`.
 
 `data/translations/en.yaml` is a **required** runtime data file —
 removing it resurrects three "translations not found" warnings on
-every conversion. On the Lua branch, `data/init.lua` is also
-required (the Lua engine sources it on every run). Both are
-listed in `gwark.cabal` `data-files`; keep them there.
+every conversion. It is listed in `gwark.cabal` `data-files`; keep
+it there.
 
 `MANUAL.md` is the canonical, hand-maintained user manual. It is
 listed in `gwark.cabal` `data-files` and the filename is also
@@ -108,11 +99,10 @@ upstream's `manfilter.lua`/`update-readme.lua` (gone).
 
 Anything cherry-picked from `upstream-3.9.0.2` that depends on the
 *old* `pandoc` library needs patching — it now depends on
-`gwark`. Two known traps in `pandoc-lua-engine` are already
-applied on the Lua branch and document the pattern:
+`gwark`. Two known traps:
 
-- `Text.Pandoc.Citeproc` is gone — drop dependent Lua bindings
-  (`pandoc.utils.citeproc`, `pandoc.utils.references`).
+- `Text.Pandoc.Citeproc` is gone — drop dependent code that
+  references it.
 - `Text.Pandoc.Readers.readCommonMark` is gone — switch to
   `readMarkdown` with extension flags. The Markdown reader handles
   the commonmark dialect.
@@ -205,8 +195,6 @@ closely):
 
 - `verify/ApiSurface.hs`, `verify/Roundtrip.hs` — preserved
   upstream-compat checks.
-- `verify/lua/run-tests.sh` (Lua branch only) — five-check shell
-  smoke test for `--lua-filter`.
 
 There is no `test/` tree and no `cabal test`. The upstream
 `test-suite test-pandoc` stanza, the matching `test/` fixtures,
@@ -225,8 +213,8 @@ project that depends on `gwark` and `pandoc-types` and run
 ## CLI surface
 
 The executable is `gwark`, not `pandoc`. `--version` reports
-`Features: -server [+/-]lua` and the scripting engine line — use
-these to confirm which build is in your hands.
+`Features: -server -lua` and the scripting engine line — use
+these to confirm the build.
 
 ## Deferred work
 
@@ -248,10 +236,8 @@ they aren't lost:
 ## Conventions
 
 Commits: imperative subject, body in bullet points explaining
-what and why (e.g. "Phase N: ...", "Restore X", "Re-add Y behind
-a flag"). One logical change per commit so reverts stay clean —
-the translation-fix and Lua-restore commits are split for exactly
-this reason.
+what and why (e.g. "Phase N: ...", "Restore X", "Drop Y"). One
+logical change per commit so reverts stay clean.
 
 Don't create PRs unless explicitly asked. Don't invoke
 `ultrareview` (user-triggered only).

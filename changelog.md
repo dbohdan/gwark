@@ -1,5 +1,13 @@
 # Revision history for pandoc
 
+## Unreleased
+
+  * Documentation: dropped references to the provisional Lua
+    branch (`gwark-lua`). The repo's working model is now a
+    single development branch (`main`) plus topical feature
+    branches. The `origin/gwark-lua` remote branch itself is not
+    deleted; only the in-repo documentation referring to it.
+
 ## gwark 3.9.0.2.1 (2026-05-10)
 
   * Restored `data/translations/en.yaml` from upstream; was
