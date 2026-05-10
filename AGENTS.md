@@ -84,6 +84,16 @@ every conversion. On the Lua branch, `data/init.lua` is also
 required (the Lua engine sources it on every run). Both are
 listed in `gwark.cabal` `data-files`; keep them there.
 
+`MANUAL.md` is the canonical, hand-maintained user manual. It is
+listed in `gwark.cabal` `data-files` and the filename is also
+hardcoded in two places: `src/Text/Pandoc/Data.hs` (the runtime
+fallback path) and `src/Text/Pandoc/Data/BakedIn.hs` (a TH
+`embedFile`). Renaming or moving `MANUAL.md` requires updating
+all three. It is the **source of truth**; the man page
+(`gwark-cli/man/gwark.1`) is also hand-maintained and was
+trimmed in parallel — don't try to regenerate either from
+upstream's `manfilter.lua`/`update-readme.lua` (gone).
+
 ## Restoration recipes
 
 Anything cherry-picked from `upstream-3.9.0.2` that depends on the
@@ -101,6 +111,36 @@ When restoring an upstream feature, look at the relevant module
 on the `upstream-3.9.0.2` tag, repoint its `build-depends` from
 `pandoc` to `gwark`, and trim references to deleted modules.
 
+## What the repo no longer carries
+
+If you go looking for upstream scaffolding and don't find it,
+that's intentional. All of the following were deleted as broken
+or upstream-only:
+
+- **Build/dev configs**: `Makefile`, `stack.yaml`, `hie.yaml`,
+  `flake.nix`, `flake.lock`, `release.nix`, `shell.nix`,
+  `.cirrus.yml`, `weeder.toml`. Everything is built with
+  `cabal build all` against `cabal.project`.
+- **CI**: `.github/workflows/` is gone. Nothing runs on push
+  or PR; verification is manual.
+- **Packaging** for binary releases: `linux/`, `macos/`,
+  `windows/`, `wasm/`. We don't ship binaries.
+- **Tooling**: `tools/` (release scripts, Lua filters for
+  regenerating MANUAL/README, docx validators) and `man/` (the
+  upstream man-page generation pipeline). The man page is
+  hand-maintained at `gwark-cli/man/gwark.1`.
+- **Tests / benchmarks**: `test/` and `benchmark/` (broken;
+  see Tests below).
+- **Top-level upstream docs**: `INSTALL.md`, `CONTRIBUTING.md`,
+  `SECURITY.md`, `CITATION.cff`, `RELEASE-CHECKLIST-TEMPLATE.org`,
+  `README.template`, `PLAN.md`. Most of `doc/` (only
+  `filters.md` and `using-the-pandoc-api.md` survive).
+
+If you actually need any of these, reintroduce a minimal version
+that matches the lean surface — don't restore the upstream
+artefact verbatim. They almost always reference deleted readers,
+writers, or packages.
+
 ## Tests
 
 - `verify/ApiSurface.hs`, `verify/Roundtrip.hs` — preserved
@@ -108,9 +148,13 @@ on the `upstream-3.9.0.2` tag, repoint its `build-depends` from
 - `verify/lua/run-tests.sh` (Lua branch only) — five-check shell
   smoke test for `--lua-filter`.
 
-The upstream test suite under `test/` is **not** wired up and most
-of it is irrelevant to the lean surface area. Don't try to run
-it. Add new checks under `verify/`.
+There is no `test/` tree, no `cabal test`, and no CI. The
+upstream `test-suite test-pandoc` stanza, the matching `test/`
+fixtures, and the `benchmark/` stanza were deleted because they
+depended on the removed upstream `pandoc` package. Verification
+is manual: build (`cabal build all`), run a smoke conversion,
+optionally run the scripts under `verify/`. Add new checks under
+`verify/`.
 
 ## CLI surface
 
