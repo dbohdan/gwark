@@ -34,15 +34,39 @@ jobs:
       - name: cabal build all (no optimization)
         run: cabal build all --disable-optimization
 
+      # 'cabal list-bin' must be told the same flags as 'cabal
+      # build' or it points at the wrong dist-newstyle subtree.
+      # The 'awk' filter strips any leading chatter ('HEAD is
+      # now at ...' from a fresh cabal store) so only the path
+      # remains.
       - name: Smoke conversion
         run: |
-          gwark_bin=$(cabal list-bin gwark-cli:exe:gwark)
+          gwark_bin=$(cabal list-bin --disable-optimization gwark-cli:exe:gwark | awk 'NF{p=$0} END{print p}')
           "$gwark_bin" --version
           out=$(echo '# Hi' | "$gwark_bin" -f markdown -t html5)
           test "$out" = '<h1 id="hi">Hi</h1>'
 
+      # 'cabal exec' writes a GHC environment file that lists
+      # 'gwark' as a hidden package; '-package gwark' exposes it
+      # so the verify scripts' 'import Text.Pandoc' resolves.
       - name: Verify API surface compiles
-        run: cabal exec -- ghc -fno-code verify/ApiSurface.hs
+        run: cabal exec -- ghc -fno-code -package gwark verify/ApiSurface.hs
 
+      # Compile-and-run rather than 'runghc'. runghc has its own
+      # arg-parsing rules and silently mishandles '-package gwark'
+      # on some GHC versions, leaving the package hidden and
+      # then complaining that 'main' is not in scope.
+      #
+      # LANG is pinned so the script's UTF-8 output (the sample
+      # contains a few non-ASCII characters in the rendered HTML)
+      # doesn't fail commitAndReleaseBuffer in a C-locale shell.
       - name: Run roundtrip smoke test
-        run: cabal exec -- runghc verify/Roundtrip.hs
+        env:
+          LANG: C.UTF-8
+        run: |
+          mkdir -p dist-newstyle/verify
+          cabal exec -- ghc -O0 -package gwark \
+            -outputdir dist-newstyle/verify \
+            -o dist-newstyle/verify/Roundtrip \
+            verify/Roundtrip.hs
+          dist-newstyle/verify/Roundtrip > /dev/null
