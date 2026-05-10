@@ -1,4 +1,17 @@
-# Contributors
+# Authors
+
+The **gwark** lean fork is maintained by **gwark contributors**.
+Individual fork contributions are recorded in `git log` on top of
+the upstream baseline tag `upstream-3.9.0.2`. The fork is licensed
+under GPL-2.0-or-later, the same license as upstream pandoc, and
+preserves the full pandoc copyright and contributor attribution
+that follows.
+
+# Pandoc contributors (upstream)
+
+The list below is upstream pandoc's `AUTHORS.md` carried verbatim.
+The vast majority of the code that survives in gwark was written
+by these people.
 
 - Aaron Wolen
 - Adelar da Silva Queiróz

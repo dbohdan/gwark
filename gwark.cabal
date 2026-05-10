@@ -4,9 +4,10 @@ version:         3.9.0.2
 build-type:      Simple
 license:         GPL-2.0-or-later
 license-file:    COPYING.md
-copyright:       (c) 2006-2024 John MacFarlane
-author:          John MacFarlane <jgm@berkeley.edu>
-maintainer:      John MacFarlane <jgm@berkeley.edu>
+copyright:       (c) 2006-2024 John MacFarlane,
+                 (c) 2026 gwark contributors
+author:          John MacFarlane <jgm@berkeley.edu>, gwark contributors
+maintainer:      gwark contributors <https://github.com/dbohdan/gwark/issues>
 bug-reports:     https://github.com/dbohdan/gwark/issues
 stability:       alpha
 homepage:        https://github.com/dbohdan/gwark
