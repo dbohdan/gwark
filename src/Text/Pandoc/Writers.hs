@@ -26,7 +26,6 @@ module Text.Pandoc.Writers
     , writeHtml5String
     , writeJSON
     , writeMarkdown
-    , writeMarkua
     , writeNative
     , writePlain
     , getWriter
@@ -62,7 +61,6 @@ writers = [
   ,("html5"             , TextWriter writeHtml5String)
   ,("chunkedhtml"       , ByteStringWriter writeChunkedHTML)
   ,("markdown"          , TextWriter writeMarkdown)
-  ,("markua"            , TextWriter writeMarkua)
   ,("plain"             , TextWriter writePlain)
   ]
 

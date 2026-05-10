@@ -30,7 +30,7 @@ The fork supports:
   including `+latex_macros` and `+raw_tex`)
 - the **HTML reader**
 - the **HTML5 writer** (and HTML4)
-- the **Markdown writer**, **plain writer**, and **Markua writer**
+- the **Markdown writer** and **plain writer**
 - the **chunked-HTML writer**
 - the **native** (Haskell AST) and **JSON** representations as
   both reader and writer
@@ -153,7 +153,6 @@ header:
     - `html4` ([XHTML] 1.0 Transitional)
     - `json` (JSON version of native AST)
     - `markdown` ([Gwerndown])
-    - `markua` ([Markua])
     - `native` (native Haskell)
     - `plain` (plain text)
     :::
@@ -346,7 +345,6 @@ header:
 [CSL JSON]: https://citeproc-js.readthedocs.io/en/latest/csl-json/markup.html
 [BibTeX]: https://ctan.org/pkg/bibtex
 [BibLaTeX]: https://ctan.org/pkg/biblatex
-[Markua]: https://leanpub.com/markua/read
 [EndNote XML bibliography]: https://support.clarivate.com/Endnote/s/article/EndNote-XML-Document-Type-Definition
 [typst]: https://typst.app
 [mdoc]: https://mandoc.bsd.lv/man/mdoc.7.html

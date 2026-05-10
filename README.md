@@ -18,7 +18,7 @@ for use with Hakyll-based static site builds (originally for
   extension set, including `+latex_macros` and `+raw_tex`.
 - The **HTML reader**.
 - A few writers: **HTML5** (and HTML4), **Markdown**, **plain**,
-  **Markua**, and **chunked HTML**.
+  and **chunked HTML**.
 - The **native** (Haskell AST) and **JSON** representations as
   both reader and writer.
 - The **JSON filter pipeline** via `Text.Pandoc.Filter` and the

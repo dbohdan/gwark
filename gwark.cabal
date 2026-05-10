@@ -21,7 +21,7 @@ description:     Lean fork of pandoc, reduced to the formats needed by
                    including +latex_macros)
                  - the HTML reader
                  - the HTML5 writer (HTML4 also)
-                 - the Markdown writer, plain writer, and Markua writer
+                 - the Markdown writer and plain writer
                  - the JSON filter pipeline
                  .
                  Removed: every other reader and writer, citeproc, the Lua
@@ -39,7 +39,6 @@ data-files:
                  data/templates/default.html5
                  data/templates/default.chunkedhtml
                  data/templates/default.markdown
-                 data/templates/default.markua
                  data/templates/default.commonmark
                  data/templates/default.plain
                  -- entities

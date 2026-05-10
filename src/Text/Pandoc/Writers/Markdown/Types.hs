@@ -44,8 +44,7 @@ data WriterEnv = WriterEnv { envInList          :: Bool
                            }
 
 data MarkdownVariant =
-      Markua
-    | PlainText
+      PlainText
     | Commonmark
     | Markdown
     deriving (Show, Eq)

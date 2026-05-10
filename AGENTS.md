@@ -45,7 +45,7 @@ cherry-picks.
 
 Removed (Phases 1–9): every reader and writer except Markdown
 (Gwerndown — see below), HTML, HTML5/HTML4 writer, Markdown
-writer, plain writer, Markua writer, native (JSON). The LaTeX
+writer, plain writer, native (JSON). The LaTeX
 reader is kept in stripped form **only** for the Markdown
 reader's `+latex_macros` and `+raw_tex` extensions. Citeproc is
 gone. `pandoc-server` is gone. PDF output is gone. The

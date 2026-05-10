@@ -343,8 +343,6 @@ getDefaultExtensions "jats_archiving"  = getDefaultExtensions "jats"
 getDefaultExtensions "jats_publishing" = getDefaultExtensions "jats"
 getDefaultExtensions "jats_articleauthoring" = getDefaultExtensions "jats"
 getDefaultExtensions "opml"            = pandocExtensions -- affects notes
-getDefaultExtensions "markua"          = extensionsFromList
-                                          []
 getDefaultExtensions "typst"           = extensionsFromList [Ext_citations,
                                                              Ext_smart]
 getDefaultExtensions "dokuwiki"        = extensionsFromList [Ext_smart]

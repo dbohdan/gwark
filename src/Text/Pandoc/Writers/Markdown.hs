@@ -19,7 +19,6 @@ Markdown:  <https://daringfireball.net/projects/markdown/>
 module Text.Pandoc.Writers.Markdown (
   writeMarkdown,
   writeCommonMark,
-  writeMarkua,
   writePlain) where
 import Control.Monad (foldM, zipWithM, MonadPlus(..), when, liftM)
 import Control.Monad.Reader ( asks, MonadReader(local) )
@@ -48,8 +47,7 @@ import Text.Pandoc.Walk
 import Text.Pandoc.Writers.HTML (writeHtml5String)
 import Text.Pandoc.Writers.Markdown.Inline (inlineListToMarkdown,
                                             linkAttributes,
-                                            attrsToMarkdown,
-                                            attrsToMarkua)
+                                            attrsToMarkdown)
 import Text.Pandoc.Writers.Markdown.Table (pipeTable, pandocTable)
 import Text.Pandoc.Writers.Markdown.Types (MarkdownVariant(..),
                                            WriterState(..),
@@ -88,30 +86,6 @@ writeCommonMark opts document =
                   if isEnabled Ext_hard_line_breaks opts
                      then WrapNone
                      else writerWrapText opts }
-
--- | Convert Pandoc to Markua.
-writeMarkua :: PandocMonad m => WriterOptions -> Pandoc -> m Text
-writeMarkua opts document =
-  evalMD (pandocToMarkdown opts' document) def{ envVariant = Markua } def
- where
-  opts' = opts{ writerExtensions =
-                  enableExtension Ext_hard_line_breaks $
-                  enableExtension Ext_pipe_tables $
-                  -- required for fancy list enumerators
-                  enableExtension Ext_fancy_lists $
-                  enableExtension Ext_startnum $
-                  enableExtension Ext_strikeout $
-                  enableExtension Ext_subscript $
-                  enableExtension Ext_superscript $
-                  enableExtension Ext_definition_lists $
-                  enableExtension Ext_smart $
-                  enableExtension Ext_footnotes
-                    mempty ,
-                writerWrapText =
-                  if isEnabled Ext_hard_line_breaks opts
-                     then WrapNone
-                     else writerWrapText opts }
-
 
 pandocTitleBlock :: Doc Text -> [Doc Text] -> Doc Text -> Doc Text
 pandocTitleBlock tit auths dat =
@@ -385,17 +359,7 @@ blockToMarkdown' opts (Div attrs@(_,classes,_) bs)
     variant <- asks envVariant
     return $
        case () of
-           _ | variant == Markua ->
-                 case () of
-                      () | "blurb" `elem` classes'
-                           -> prefixed "B> " contents <> blankline
-                         | "aside" `elem` classes'
-                           -> prefixed "A> " contents <> blankline
-                         -- necessary to enable option to create a bibliography
-                         | (take 3 (T.unpack id')) == "ref"
-                           -> contents <> blankline
-                         | otherwise -> contents <> blankline
-             | isEnabled Ext_fenced_divs opts ->
+           _ | isEnabled Ext_fenced_divs opts ->
                   let attrsToMd = if variant == Commonmark
                                   then attrsToMarkdown opts
                                   else classOrAttrsToMarkdown opts
@@ -480,7 +444,6 @@ blockToMarkdown' opts b@(RawBlock f str) = do
         -- the 'nest 0' ensures that leading and trailing newlines
         -- don't get collapsed. See #10477 for context;
          -> return $ nest 0 (literal str) <> literal "\n"
-    Markua -> renderEmpty
     _ | f `elem` ["html", "html5", "html4"]
       , isEnabled Ext_markdown_attribute opts
          -> return $ literal (addMarkdownAttribute str) <> literal "\n"
@@ -492,12 +455,10 @@ blockToMarkdown' opts b@(RawBlock f str) = do
          -> return $ literal str <> literal "\n"
       | isEnabled Ext_raw_attribute opts -> rawAttribBlock
     _ -> renderEmpty
-blockToMarkdown' opts HorizontalRule = do
-  variant <- asks envVariant
-  let indicator = case variant of
-                        Markua -> "* * *"
-                        _ -> T.replicate (writerColumns opts) "-"
-  return $ blankline <> literal indicator <> blankline
+blockToMarkdown' opts HorizontalRule =
+  return $ blankline <>
+           literal (T.replicate (writerColumns opts) "-") <>
+           blankline
 blockToMarkdown' opts (Header level attr inlines) = do
   -- first, if we're putting references at the end of a section, we
   -- put them here.
@@ -519,8 +480,7 @@ blockToMarkdown' opts (Header level attr inlines) = do
                                  && id' == autoId -> empty
                    (id',_,_)   | isEnabled Ext_mmd_header_identifiers opts ->
                                     space <> brackets (literal id')
-                   _ | variant == Markua -> attrsToMarkua opts attr
-                     | isEnabled Ext_header_attributes opts ||
+                   _ | isEnabled Ext_header_attributes opts ||
                        isEnabled Ext_attributes opts ->
                                     space <> attrsToMarkdown opts attr
                      | otherwise -> empty
@@ -558,8 +518,6 @@ blockToMarkdown' opts (Header level attr inlines) = do
             -- ghc interprets '#' characters in column 1 as linenum specifiers.
             _ | variant == PlainText || isEnabled Ext_literate_haskell opts ->
                 contents <> blankline
-            _ | variant == Markua -> attr' <> cr <> literal (T.replicate level "#")
-                                        <> space <> contents <> blankline
             _ -> literal (T.replicate level "#") <> space <> contents <> attr' <> blankline
 
   return $ refs <> hdr
@@ -576,9 +534,7 @@ blockToMarkdown' opts (CodeBlock attribs str) = do
           backticks <> attrs <> cr <> literal str <> cr <> backticks <> blankline
            | isEnabled Ext_fenced_code_blocks opts ->
           tildes <> attrs <> cr <> literal str <> cr <> tildes <> blankline
-     _ | variant == Markua -> blankline <> attrsToMarkua opts attribs <> cr <> backticks <> cr <>
-                                literal str <> cr <> backticks <> cr <> blankline
-       | otherwise -> -- don't use nest: see #11542
+     _ | otherwise -> -- don't use nest: see #11542
            let addIndent "" = "\n"
                addIndent x  = (T.replicate (writerTabStop opts) " ") <> x <> "\n"
           in  literal (mconcat $ map addIndent (T.lines str)) $$ blankline
@@ -704,21 +660,15 @@ blockToMarkdown' opts (OrderedList (start,sty,delim) items) = do
                   then start
                   else 1
   let sty'   = if isEnabled Ext_fancy_lists opts then sty else DefaultStyle
-  let delim' | isEnabled Ext_fancy_lists opts =
-               case variant of
-                   -- Markua supports 'fancy' enumerators, but no TwoParens
-                   Markua -> if delim == TwoParens then OneParen else delim
-                   _ -> delim
+  let delim' | isEnabled Ext_fancy_lists opts = delim
              | variant == Commonmark && --commonmark only supports one paren
                    (delim == OneParen || delim == TwoParens) = OneParen
              | otherwise = DefaultDelim
   let attribs = (start', sty', delim')
   let markers  = orderedListMarkers attribs
-  let markers' = case variant of
-                        Markua -> markers
-                        _ -> map (\m -> if T.length m < 3
-                                   then m <> T.replicate (3 - T.length m) " "
-                                   else m) markers
+  let markers' = map (\m -> if T.length m < 3
+                              then m <> T.replicate (3 - T.length m) " "
+                              else m) markers
   contents <- inList $
               zipWithM (orderedListItemToMarkdown opts) markers' items
   return $ (if isTightList items then vcat else vsep) contents <> blankline
@@ -808,7 +758,6 @@ bulletListItemToMarkdown opts bs = do
   let exts = writerExtensions opts
   contents <- blockListToMarkdown opts $ taskListItemToAscii exts bs
   let start = case variant of
-              Markua -> "* "
               Commonmark -> "- "
               Markdown
                 | isEnabled Ext_four_space_rule opts
@@ -839,9 +788,7 @@ orderedListItemToMarkdown opts marker bs = do
   let ind = if isEnabled Ext_four_space_rule opts
                then writerTabStop opts
                else max (writerTabStop opts) (T.length marker + 1)
-  let start = case variant of
-              Markua -> literal marker <> " "
-              _      -> literal marker <> sps
+  let start = literal marker <> sps
   -- remove trailing blank line if item ends with a tight list
   let contents' = if itemEndsWithTightList bs
                      then chomp contents <> cr
@@ -864,9 +811,7 @@ definitionListItemToMarkdown opts (label, defs) = do
                         PlainText -> " "
                         _ -> ":"
        let leadingChars = case tabStop of
-                            -- Always use two leading characters for Markua
-                            n | variant == Markua -> 2
-                              | isEnabled Ext_four_space_rule opts
+                            n | isEnabled Ext_four_space_rule opts
                               , n >= 2 -> n
                               | otherwise -> 2
        let sps = literal $ T.replicate (leadingChars - 1) " "
@@ -931,7 +876,6 @@ blockListToMarkdown opts blocks = do
       isListBlock _                  = False
       commentSep
         | variant == PlainText        = Plain []
-        | variant == Markua           = Plain []
         | isEnabled Ext_raw_html opts = RawBlock "html" "<!-- -->\n"
         | otherwise                   = RawBlock "markdown" "&nbsp;\n"
   mconcat <$> mapM (blockToMarkdown opts) (fixBlocks blocks)

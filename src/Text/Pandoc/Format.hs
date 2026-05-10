@@ -196,7 +196,6 @@ formatFromFilePath x =
     ".lhs"      -> defFlavor "markdown" `withExtension` Ext_literate_haskell
     ".ltx"      -> defFlavor "latex"
     ".markdown" -> defFlavor "markdown"
-    ".markua"   -> defFlavor "markua"
     ".md"       -> defFlavor "markdown"
     ".mdown"    -> defFlavor "markdown"
     ".mdwn"     -> defFlavor "markdown"
