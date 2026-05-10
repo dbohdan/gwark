@@ -429,12 +429,12 @@ will cause pandoc to call the program `demo` with argument `html`.
 
 ## Environment variables
 
-Pandoc sets additional environment variables before calling a
-filter.
+gwark sets additional environment variables before calling a
+filter. The variable names are kept under their upstream spellings
+(`PANDOC_*`) for compatibility with existing filter programs.
 
 `PANDOC_VERSION`
-:   The version of the pandoc binary used to process the document.
-    Example: `2.11.1`.
+:   The version of the gwark binary used to process the document.
 
 `PANDOC_READER_OPTIONS`
 :   JSON object representation of the options passed to the input

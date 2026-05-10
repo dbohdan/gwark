@@ -4,8 +4,10 @@ Forked from pandoc upstream commit `12051ec38a433fbea481f7701f1667caf17d0c9b`
 Upstream baseline tag: `upstream-3.9.0.2`.
 Pre-LaTeX-prune checkpoint: `pre-latex-prune`.
 
-The fork's cabal package is renamed to **gwark**; the CLI executable
-is still named `pandoc` so existing scripts continue to work.
+The fork's cabal package and CLI executable are both renamed to
+**gwark**. Downstream consumers must update their `build-depends`,
+and any scripts that previously shelled out to `pandoc` need to be
+pointed at `gwark`.
 
 ## Baseline (pre-fork)
 

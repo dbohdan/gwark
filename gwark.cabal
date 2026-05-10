@@ -11,7 +11,7 @@ bug-reports:     https://github.com/dbohdan/gwark/issues
 stability:       alpha
 homepage:        https://github.com/dbohdan/gwark
 category:        Text
-tested-with:     GHC == 9.6.7, GHC == 9.8.4, GHC == 9.10.3, GHC == 9.12.2
+tested-with:     GHC == 9.6.6
 synopsis:        Conversion between Gwerndown and HTML (lean fork)
 description:     Lean fork of pandoc, reduced to the formats needed by
                  Hakyll-based static site builds. Supports:
@@ -29,7 +29,7 @@ description:     Lean fork of pandoc, reduced to the formats needed by
                  Markdown reader's @+latex_macros@ extension and
                  raw-LaTeX passthrough continue to work.
                  .
-                 The CLI executable lives in the @pandoc-cli@ package.
+                 The CLI executable lives in the @gwark-cli@ package.
 data-files:
                  -- templates
                  data/templates/styles.html
