@@ -51,7 +51,7 @@ data-files:
                  -- bash completion template
                  data/bash_completion.tpl
                  -- documentation
-                 MANUAL.txt, COPYRIGHT
+                 MANUAL.md, COPYRIGHT
 extra-doc-files: changelog.md,
                  AUTHORS.md,
                  README.md,

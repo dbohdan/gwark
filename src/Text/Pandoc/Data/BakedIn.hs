@@ -24,5 +24,5 @@ dataFiles = map (\(fp, contents) ->
   (Posix.joinPath (splitDirectories fp), contents)) dataFiles'
 
 dataFiles' :: [(FilePath, B.ByteString)]
-dataFiles' = ("MANUAL.txt", $(embedFile "MANUAL.txt")) :
+dataFiles' = ("MANUAL.md", $(embedFile "MANUAL.md")) :
              $(embedDir "data")

@@ -53,7 +53,7 @@ readDefaultDataFile fname =
     Just contents -> return contents
 #else
   getDataFileName fname' >>= checkExistence >>= readFileStrict
-    where fname' = if fname == "MANUAL.txt" then fname else "data" </> fname
+    where fname' = if fname == "MANUAL.md" then fname else "data" </> fname
 
 -- | Returns the input filename unchanged if the file exits, and throws
 -- a `PandocCouldNotFindDataFileError` if it doesn't.
