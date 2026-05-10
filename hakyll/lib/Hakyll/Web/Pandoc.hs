@@ -59,27 +59,10 @@ readPandocWith ropt item =
         Right item' -> return item'
   where
     reader ro t = case t of
-        DocBook            -> readDocBook ro
         Html               -> readHtml ro
-        Jupyter            -> readIpynb ro
         LaTeX              -> readLaTeX ro
         LiterateHaskell t' -> reader (addExt ro Ext_literate_haskell) t'
         Markdown           -> readMarkdown ro
-        MediaWiki          -> readMediaWiki ro
-        OrgMode            -> readOrg ro
-        Rst                -> readRST ro
-#if MIN_VERSION_pandoc(3,8,3)
-        AsciiDoc           -> readAsciiDoc ro
-#endif
-#if MIN_VERSION_pandoc(3,1,12)
-        Djot               -> readDjot ro
-#endif
--- This preprocessing instruction can be dropped
--- once the minimum supported GHC version is 8.10
-#if MIN_VERSION_pandoc(3,1,3)
-        Typst              -> readTypst ro
-#endif
-        Textile            -> readTextile ro
         _                  -> error $
             "Hakyll.Web.readPandocWith: I don't know how to read a file of " ++
             "the type " ++ show t ++ " for: " ++ show (itemIdentifier item)

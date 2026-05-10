@@ -4,6 +4,26 @@ title: Releases
 
 # Releases
 
+## hakyll-gwark 4.17.0.0.1 — gwark fork
+
+Forked from `jaspervdj/hakyll@4.17.0.0`. Patches:
+
+- Package renamed `hakyll` → `hakyll-gwark`. Module names
+  unchanged.
+- `build-depends: pandoc` repointed to `build-depends: gwark`.
+- `Hakyll.Web.Pandoc.Biblio` removed (citeproc is not part of
+  gwark; the module's only consumer of `Text.Pandoc.Citeproc`).
+- `Hakyll.Web.Pandoc` reader dispatch: removed arms for
+  `DocBook`, `Jupyter`, `MediaWiki`, `OrgMode`, `Rst`, `Textile`,
+  `AsciiDoc`, `Djot`, `Typst` (formats not shipped by gwark).
+  `Html`, `LaTeX`, `Markdown`, `LiterateHaskell` survive. Unknown
+  file types still fall through the catch-all error.
+- `Hakyll.Web.Pandoc.FileType` enum: dropped the corresponding
+  constructors and file-extension arms.
+- `Executable hakyll-init` renamed `hakyll-gwark-init`. The
+  built-in example site's `about.rst` was renamed
+  `about.markdown` (the content was already Markdown-compatible).
+
 ## 4.17.0.0
 
 This release is nearly identical to 4.16.8.0. However, 4.16.8.0 contains a breaking change

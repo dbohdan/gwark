@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 --------------------------------------------------------------------------------
 -- | A module dealing with pandoc file extensions and associated file types
 module Hakyll.Web.Pandoc.FileType
@@ -19,32 +18,17 @@ import           Hakyll.Core.Item
 
 --------------------------------------------------------------------------------
 -- | Datatype to represent the different file types Hakyll can deal with by
--- default
+-- default. The hakyll-gwark fork keeps only the formats gwark's reader
+-- surface supports: Html, LaTeX, Markdown, and the literate-Haskell
+-- variant. Binary, Css, and PlainText survive for non-Pandoc paths.
 data FileType
     = Binary
     | Css
-    | DocBook
     | Html
-    | Jupyter
     | LaTeX
     | LiterateHaskell FileType
     | Markdown
-    | MediaWiki
-    | OrgMode
     | PlainText
-    | Rst
-    | Textile
-#if MIN_VERSION_pandoc(3,8,3)
-    | AsciiDoc
-#endif
-#if MIN_VERSION_pandoc(3,1,12)
-    | Djot
-#endif
--- This preprocessing instruction can be dropped
--- once the minimum supported GHC version is 8.10
-#if MIN_VERSION_pandoc(3,1,3)
-    | Typst
-#endif
     deriving (Eq, Ord, Show, Read)
 
 
@@ -54,8 +38,6 @@ fileType :: FilePath -> FileType
 fileType = uncurry fileType' . splitExtension
   where
     fileType' _ ".css"       = Css
-    fileType' _ ".dbk"       = DocBook
-    fileType' _ ".ipynb"     = Jupyter
     fileType' _ ".htm"       = Html
     fileType' _ ".html"      = Html
     fileType' f ".lhs"       = LiterateHaskell $ case fileType f of
@@ -64,34 +46,16 @@ fileType = uncurry fileType' . splitExtension
         -- Otherwise, LaTeX + LiterateHaskell or whatever the user specified
         x      -> x
     fileType' _ ".markdown"  = Markdown
-    fileType' _ ".mediawiki" = MediaWiki
     fileType' _ ".md"        = Markdown
     fileType' _ ".mdn"       = Markdown
     fileType' _ ".mdown"     = Markdown
     fileType' _ ".mdwn"      = Markdown
     fileType' _ ".mkd"       = Markdown
     fileType' _ ".mkdwn"     = Markdown
-    fileType' _ ".org"       = OrgMode
     fileType' _ ".page"      = Markdown
-    fileType' _ ".rst"       = Rst
     fileType' _ ".tex"       = LaTeX
     fileType' _ ".text"      = PlainText
-    fileType' _ ".textile"   = Textile
     fileType' _ ".txt"       = PlainText
-#if MIN_VERSION_pandoc(3,8,3)
-    fileType' _ ".asciidoc"  = AsciiDoc
-    fileType' _ ".adoc"      = AsciiDoc
-#endif
-#if MIN_VERSION_pandoc(3,1,12)
-    fileType' _ ".dj"        = Djot
-    fileType' _ ".djot"      = Djot
-#endif
--- This preprocessing instruction can be dropped
--- once the minimum supported GHC version is 8.10
-#if MIN_VERSION_pandoc(3,1,3)
-    fileType' _ ".typ"       = Typst
-#endif
-    fileType' _ ".wiki"      = MediaWiki
     fileType' _ _            = Binary  -- Treat unknown files as binary
 
 

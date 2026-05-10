@@ -1,11 +1,21 @@
-Name:    hakyll
-Version: 4.17.0.0
+Name:    hakyll-gwark
+Version: 4.17.0.0.1
 
-Synopsis: A static website compiler library
+Synopsis: Hakyll fork targeting the gwark lean pandoc fork
 Description:
+  This is `hakyll-gwark`, a fork of Hakyll for use with the `gwark` lean
+  pandoc fork (https://github.com/dbohdan/gwark). Module names are
+  unchanged from upstream Hakyll; downstream code just changes its
+  `build-depends` to `hakyll-gwark`. The fork drops
+  `Hakyll.Web.Pandoc.Biblio` (citeproc is not part of gwark) and the
+  reader-dispatch arms for formats gwark doesn't ship (DocBook, Ipynb,
+  MediaWiki, Org, RST, Textile, AsciiDoc, Djot, Typst).
+  .
+  Upstream description follows.
+  .
   Hakyll is a static website compiler library. It provides you with the tools to
   create a simple or advanced static website using a Haskell DSL and formats
-  such as markdown or RST. You can find more information, including a tutorial,
+  such as markdown. You can find more information, including a tutorial,
   on the website:
 
   .
@@ -29,10 +39,10 @@ Description:
   Additionally, there's the Haddock documentation in the different modules,
   meant as a reference.
 
-Author:       Jasper Van der Jeugt <m@jaspervdj.be>
-Maintainer:   Jasper Van der Jeugt <m@jaspervdj.be>
-Homepage:     http://jaspervdj.be/hakyll
-Bug-Reports:  http://github.com/jaspervdj/Hakyll/issues
+Author:       Jasper Van der Jeugt <m@jaspervdj.be>, gwark contributors
+Maintainer:   gwark contributors <https://github.com/dbohdan/gwark/issues>
+Homepage:     https://github.com/dbohdan/gwark
+Bug-Reports:  https://github.com/dbohdan/gwark/issues
 License:      BSD3
 License-File: LICENSE
 Category:     Web
@@ -54,24 +64,11 @@ Data-files:
   example/templates/post.html
   example/css/default.css
   example/index.html
-  example/about.rst
+  example/about.markdown
   example/contact.markdown
 
 Extra-source-files:
   CHANGELOG.md
-  tests/data/biblio/chicago.csl
-  tests/data/biblio/cites-meijer-pandoc-2.0.0plus.golden
-  tests/data/biblio/cites-meijer-pandoc-3.0.0plus.golden
-  tests/data/biblio/cites-meijer-pandoc-3.1.8plus.golden
-  tests/data/biblio/cites-multiple-pandoc-2.0.0plus.golden
-  tests/data/biblio/cites-multiple-pandoc-3.0.0plus.golden
-  tests/data/biblio/cites-multiple-pandoc-3.1.8plus.golden
-  tests/data/biblio/cites-multiple.markdown
-  tests/data/biblio/default.html
-  tests/data/biblio/page.markdown
-  tests/data/biblio/refs.bib
-  tests/data/biblio/refs.yaml
-  tests/data/biblio/refs2.yaml
   tests/data/embed.html
   tests/data/example.md
   tests/data/example.md.metadata
@@ -99,7 +96,8 @@ Extra-source-files:
 
 Source-Repository head
   Type:     git
-  Location: https://github.com/jaspervdj/hakyll.git
+  Location: https://github.com/dbohdan/gwark.git
+  Subdir:   hakyll
 
 Flag previewServer
   Description: Include the preview server
@@ -183,7 +181,7 @@ Library
     Hakyll.Core.Provider.Internal
     Hakyll.Core.Provider.MetadataCache
     Hakyll.Core.Util.Parser
-    Paths_hakyll
+    Paths_hakyll_gwark
 
   Build-Depends:
     aeson                >= 1.0      && < 1.6 || >= 2.0 && < 2.3,
@@ -249,12 +247,11 @@ Library
   If flag(usePandoc)
     Exposed-Modules:
       Hakyll.Web.Pandoc
-      Hakyll.Web.Pandoc.Biblio
       Hakyll.Web.Pandoc.FileType
     Other-Modules:
       Hakyll.Web.Pandoc.Binary
     Build-Depends:
-      pandoc >= 2.11 && < 2.20 || >= 3.0 && < 3.10,
+      gwark >= 3.9 && < 3.10,
       pandoc-types >= 1.22 && < 1.24
     Cpp-options:
       -DUSE_PANDOC
@@ -290,7 +287,7 @@ Test-suite hakyll-tests
     TestSuite.Util
 
   Build-Depends:
-    hakyll,
+    hakyll-gwark,
     QuickCheck                 >= 2.8  && < 2.19,
     tasty                      >= 0.11 && < 1.6,
     tasty-golden               >= 2.3  && < 2.4,
@@ -319,26 +316,25 @@ Test-suite hakyll-tests
 
   If flag(usePandoc)
     Other-modules:
-      Hakyll.Web.Pandoc.Biblio.Tests
       Hakyll.Web.Pandoc.FileType.Tests
     Cpp-options:
       -DUSE_PANDOC
     Build-Depends:
-      pandoc >= 2.11 && < 2.20 || >= 3.0 && < 3.10,
+      gwark >= 3.9 && < 3.10,
       pandoc-types >= 1.22 && < 1.24
 
 
-Executable hakyll-init
+Executable hakyll-gwark-init
   Main-is:          Init.hs
   Ghc-options:      -Wall -threaded
   Hs-source-dirs:   src
   Default-language: Haskell2010
 
   Other-modules:
-    Paths_hakyll
+    Paths_hakyll_gwark
 
   Build-depends:
-    hakyll,
+    hakyll-gwark,
     base      >= 4.12 && < 5,
     directory >= 1.0  && < 1.4,
     filepath  >= 1.0  && < 1.6
@@ -355,9 +351,9 @@ Executable hakyll-website
     Buildable: False
 
   Build-depends:
-    hakyll,
+    hakyll-gwark,
     base      >= 4.12  && < 5,
     directory >= 1.0   && < 1.4,
     filepath  >= 1.0   && < 1.6,
-    pandoc    >= 2.11  && < 2.20 || >= 3.0 && < 3.10,
+    gwark     >= 3.9   && < 3.10,
     pandoc-types >= 1.22 && < 1.24

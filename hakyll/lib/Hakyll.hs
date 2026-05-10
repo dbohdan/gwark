@@ -26,7 +26,6 @@ module Hakyll
     , module Hakyll.Web.Paginate
 #ifdef USE_PANDOC
     , module Hakyll.Web.Pandoc
-    , module Hakyll.Web.Pandoc.Biblio
     , module Hakyll.Web.Pandoc.FileType
 #endif
     , module Hakyll.Web.Redirect
@@ -62,7 +61,6 @@ import           Hakyll.Web.Meta.TwitterCard
 import           Hakyll.Web.Paginate
 #ifdef USE_PANDOC
 import           Hakyll.Web.Pandoc
-import           Hakyll.Web.Pandoc.Biblio
 import           Hakyll.Web.Pandoc.FileType
 #endif
 import           Hakyll.Web.Redirect

@@ -24,7 +24,7 @@ import           System.FilePath       (splitDirectories, (</>))
 
 --------------------------------------------------------------------------------
 import           Hakyll.Core.Util.File
-import           Paths_hakyll
+import           Paths_hakyll_gwark
 
 
 --------------------------------------------------------------------------------
