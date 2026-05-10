@@ -955,37 +955,6 @@ options =
                   "FILE")
                  "" -- "Directory of fonts to embed"
 
-    , Option "" ["split-level"]
-                 (ReqArg
-                  (\arg opt ->
-                      case safeStrRead arg of
-                           Just t | t >= 1 && t <= 6 ->
-                                    return opt { optSplitLevel = t }
-                           _      -> optError $ PandocOptionError
-                                    "Argument of --split-level must be a number between 1 and 6")
-                 "NUMBER")
-                 "" -- "Header level at which to split documents in chunked HTML or EPUB"
-
-    , Option "" ["chunk-template"]
-                 (ReqArg
-                  (\arg opt ->
-                     return opt{ optChunkTemplate = Just (T.pack arg) })
-                 "PATHTEMPLATE")
-                 "" -- "Template for file paths in chunkedhtml"
-
-    , Option "" ["epub-chapter-level"]
-                 (ReqArg
-                  (\arg opt -> do
-                      deprecatedOption "--epub-chapter-level"
-                                       "use --split-level"
-                      case safeStrRead arg of
-                           Just t | t >= 1 && t <= 6 ->
-                                    return opt { optSplitLevel = t }
-                           _      -> optError $ PandocOptionError
-                                    "Argument of --epub-chapter-level must be a number between 1 and 6")
-                 "NUMBER")
-                 "" -- "Header level at which to split documents in chunked HTML or EPUB"
-
     , Option "" ["ipynb-output"]
                  (ReqArg
                   (\arg opt ->

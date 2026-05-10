@@ -132,8 +132,6 @@ data Opt = Opt
     , optHTMLMathMethod        :: HTMLMathMethod -- ^ Method to print HTML math
     , optAbbreviations         :: Maybe FilePath -- ^ Path to abbrevs file
     , optReferenceDoc          :: Maybe FilePath -- ^ Path of reference doc
-    , optSplitLevel            :: Int     -- ^ Header level at which to split documents in epub and chunkedhtml
-    , optChunkTemplate         :: Maybe Text -- ^ Template to use for chunk filenames
     , optEpubSubdirectory      :: String -- ^ EPUB subdir in OCF container
     , optEpubMetadata          :: Maybe FilePath   -- ^ EPUB metadata
     , optEpubFonts             :: [FilePath] -- ^ EPUB fonts to embed
@@ -219,9 +217,6 @@ instance FromJSON Opt where
        <*> o .:? "html-math-method" .!= optHTMLMathMethod defaultOpts
        <*> o .:? "abbreviations"
        <*> o .:? "reference-doc"
-       <*> ((o .:? "split-level") <|> (o .:? "epub-chapter-level"))
-             .!= optSplitLevel defaultOpts
-       <*> o .:? "chunk-template"
        <*> o .:? "epub-subdirectory" .!= optEpubSubdirectory defaultOpts
        <*> o .:? "epub-metadata"
        <*> o .:? "epub-fonts" .!= optEpubFonts defaultOpts
@@ -603,12 +598,6 @@ doOpt (k,v) = do
     "epub-fonts" ->
       parseJSON v >>= \x -> return (\o -> o{ optEpubFonts = optEpubFonts o <>
                                                map unpack x })
-    "epub-chapter-level" ->
-      parseJSON v >>= \x -> return (\o -> o{ optSplitLevel = x })
-    "split-level" ->
-      parseJSON v >>= \x -> return (\o -> o{ optSplitLevel = x })
-    "chunk-template" ->
-      parseJSON v >>= \x -> return (\o -> o{ optChunkTemplate = Just x })
     "epub-cover-image" ->
       parseJSON v >>= \x ->
              return (\o -> o{ optEpubCoverImage = unpack <$> x })
@@ -795,8 +784,6 @@ defaultOpts = Opt
     , optHTMLMathMethod        = PlainMath
     , optAbbreviations         = Nothing
     , optReferenceDoc          = Nothing
-    , optSplitLevel            = 1
-    , optChunkTemplate         = Nothing
     , optEpubSubdirectory      = "EPUB"
     , optEpubMetadata          = Nothing
     , optEpubFonts             = []

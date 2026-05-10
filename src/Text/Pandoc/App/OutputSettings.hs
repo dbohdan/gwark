@@ -37,7 +37,6 @@ import System.Directory (getCurrentDirectory)
 import System.Exit (exitSuccess)
 import System.FilePath
 import System.IO (stdout)
-import Text.Pandoc.Chunks (PathTemplate(..))
 import Text.Pandoc
 import Text.Pandoc.App.Opt (Opt (..))
 import Text.Pandoc.App.CommandLineOptions (engines)
@@ -101,7 +100,6 @@ optToOutputSettings scriptingEngine opts = do
   let makeSandboxed pureWriter =
         case pureWriter of
              TextWriter w -> TextWriter $ \o d -> sandbox' opts (w o d)
-             ByteStringWriter w -> ByteStringWriter $ \o d -> sandbox' opts (w o d)
 
   let standalone = optStandalone opts || isBinaryFormat format || pdfOutput
   let templateOrThrow = \case
@@ -259,10 +257,6 @@ optToOutputSettings scriptingEngine opts = do
         , writerEpubMetadata     = epubMetadata
         , writerEpubFonts        = optEpubFonts opts
         , writerEpubTitlePage    = optEpubTitlePage opts
-        , writerSplitLevel       = optSplitLevel opts
-        , writerChunkTemplate    = maybe (PathTemplate "%s-%i.html")
-                                     PathTemplate
-                                     (optChunkTemplate opts)
         , writerTOCDepth         = optTOCDepth opts
         , writerReferenceDoc     = optReferenceDoc opts
         , writerSyntaxMap        = syntaxMap

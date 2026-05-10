@@ -83,11 +83,11 @@ import qualified Text.Pandoc.UTF8 as UTF8
 import Text.Pandoc.XML (escapeStringForXML)
 import Text.DocTemplates (Context(..), Val(..), TemplateTarget,
                           ToContext(..), FromContext(..))
-import Text.Pandoc.Chunks (tocToList, toTOCTree)
+import Data.Tree (Tree(..))
 import Text.Collate.Lang (Lang (..))
 import Text.Pandoc.Class (PandocMonad, toLang)
 import Text.Pandoc.Translations (setTranslations)
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, isNothing)
 import qualified Text.Pandoc.Writers.AnnotatedTable as Ann
 
 -- import Debug.Trace
@@ -667,6 +667,80 @@ toTableOfContents opts =
   tocToList (writerNumberSections opts) (writerTOCDepth opts)
   . toTOCTree
   . makeSections (writerNumberSections opts) Nothing
+
+-- | Data for a section in a hierarchical document. Inlined from
+-- the deleted Text.Pandoc.Chunks module: 'toTableOfContents' is
+-- the only surviving caller.
+data SecInfo =
+  SecInfo
+  { secTitle :: [Inline]
+  , secNumber :: Maybe Text
+  , secId :: Text
+  , secLevel :: Int
+  }
+
+instance Walkable Inline SecInfo where
+  query f sec = query f (secTitle sec)
+  walk f sec = sec{ secTitle = walk f (secTitle sec) }
+  walkM f sec = do
+    st <- walkM f (secTitle sec)
+    return sec{ secTitle = st }
+
+-- | Build a tree of section info from a '[Block]' produced by
+-- 'makeSections'. Inlined from the deleted Text.Pandoc.Chunks.
+toTOCTree :: [Block] -> Tree SecInfo
+toTOCTree =
+  Node SecInfo{ secTitle = []
+              , secNumber = Nothing
+              , secId = ""
+              , secLevel = 0 } . foldr go []
+ where
+  go :: Block -> [Tree SecInfo] -> [Tree SecInfo]
+  go (Div (ident,_,_) (Header lev (_,classes,kvs) ils : subsecs))
+    | not (isNothing (lookup "number" kvs) && "unlisted" `elem` classes)
+    = ((Node SecInfo{ secTitle = ils
+                    , secNumber = lookup "number" kvs
+                    , secId = ident
+                    , secLevel = lev } (foldr go [] subsecs)) :)
+  go (Div _ [d@Div{}]) = go d -- #8402
+  go _ = id
+
+-- | Render one entry of the TOC tree as inline link text.
+-- Inlined from the deleted Text.Pandoc.Chunks.
+tocEntryToLink :: Bool -> SecInfo -> [Inline]
+tocEntryToLink includeNumbers secinfo = headerLink
+ where
+  addNumber  = case secNumber secinfo of
+                 Just num | includeNumbers
+                        -> (Span ("",["toc-section-number"],[])
+                               [Str num] :) . (Space :)
+                 _ -> id
+  clean (Link _ xs _) = xs
+  clean (Note _) = []
+  clean x = [x]
+  anchor = if T.null (secId secinfo)
+              then ""
+              else "#" <> secId secinfo
+  headerText = addNumber $ walk (concatMap clean) (secTitle secinfo)
+  headerLink = if T.null anchor
+                  then headerText
+                  else [Link ((if T.null (secId secinfo)
+                                  then ""
+                                  else "toc-" <> secId secinfo), [], [])
+                         headerText (anchor, "")]
+
+-- | Generate a table of contents of the given depth from a
+-- 'toTOCTree' result. Inlined from the deleted Text.Pandoc.Chunks.
+tocToList :: Bool -> Int -> Tree SecInfo -> Block
+tocToList includeNumbers tocDepth (Node _ subtrees) = BulletList (toItems subtrees)
+ where
+  toItems = map go . filter isBelowTocDepth
+  isBelowTocDepth (Node sec _) = secLevel sec <= tocDepth
+  go (Node secinfo xs) =
+    Plain (tocEntryToLink includeNumbers secinfo) :
+      case toItems xs of
+        [] -> []
+        ys -> [BulletList ys]
 
 -- | Returns 'True' iff the list of blocks has a @'Plain'@ as its last
 -- element.

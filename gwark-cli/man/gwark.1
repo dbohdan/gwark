@@ -165,9 +165,6 @@ Specify output format.
 \f[I]FORMAT\f[R] can be:
 .RS
 .IP \(bu 2
-\f[CR]chunkedhtml\f[R] (zip archive of multiple linked HTML
-files; see CHUNKED HTML below)
-.IP \(bu 2
 \f[CR]html\f[R] or \f[CR]html5\f[R] (HTML, i.e.\ HTML5/XHTML
 polyglot markup)
 .IP \(bu 2
@@ -190,14 +187,7 @@ See \f[CR]\-\-list\-output\-formats\f[R] and
 .TP
 \f[CR]\-o\f[R] \f[I]FILE\f[R], \f[CR]\-\-output=\f[R]\f[I]FILE\f[R]
 Write output to \f[I]FILE\f[R] instead of \f[I]stdout\f[R].
-If \f[I]FILE\f[R] is \f[CR]\-\f[R], output will go to \f[I]stdout\f[R],
-even if a non\-textual format (\f[CR]docx\f[R], \f[CR]odt\f[R],
-\f[CR]epub2\f[R], \f[CR]epub3\f[R]) is specified.
-If the output format is \f[CR]chunkedhtml\f[R] and \f[I]FILE\f[R] has no
-extension, then instead of producing a \f[CR].zip\f[R] file pandoc will
-create a directory \f[I]FILE\f[R] and unpack the zip archive there
-(unless \f[I]FILE\f[R] already exists, in which case an error will be
-raised).
+If \f[I]FILE\f[R] is \f[CR]\-\f[R], output will go to \f[I]stdout\f[R].
 .TP
 \f[CR]\-\-data\-dir=\f[R]\f[I]DIRECTORY\f[R]
 Specify the user data directory to search for pandoc data files.
@@ -1089,31 +1079,6 @@ and then modify \f[CR]custom\-reference.pptx\f[R] in MS PowerPoint
 (pandoc will use the layouts with the names listed above).
 .RE
 .RE
-.TP
-\f[CR]\-\-split\-level=\f[R]\f[I]NUMBER\f[R]
-Specify the heading level at which to split an EPUB or chunked HTML
-document into separate files.
-The default is to split into chapters at level\-1 headings.
-In the case of EPUB, this option only affects the internal composition
-of the EPUB, not the way chapters and sections are displayed to users.
-Some readers may be slow if the chapter files are too large, so for
-large documents with few level\-1 headings, one might want to use a
-chapter level of 2 or 3.
-For chunked HTML, this option determines how much content goes in each
-\(lqchunk.\(rq
-.TP
-\f[CR]\-\-chunk\-template=\f[R]\f[I]PATHTEMPLATE\f[R]
-Specify a template for the filenames in a \f[CR]chunkedhtml\f[R]
-document.
-In the template, \f[CR]%n\f[R] will be replaced by the chunk number
-(padded with leading 0s to 3 digits), \f[CR]%s\f[R] with the section
-number of the chunk, \f[CR]%h\f[R] with the heading text (with
-formatting removed), \f[CR]%i\f[R] with the section identifier.
-For example, \f[CR]section\-%s\-%i.html\f[R] might be resolved to
-\f[CR]section\-1.1\-introduction.html\f[R].
-The characters \f[CR]/\f[R] and \f[CR]\(rs\f[R] are not allowed in chunk
-templates and will be ignored.
-The default is \f[CR]%s\-%i.html\f[R].
 .SS Math rendering in HTML
 The default is to render TeX math as far as possible using Unicode
 characters.
@@ -5135,24 +5100,6 @@ Note that the list of extensions for \f[CR]commonmark\f[R],
 default commonmark.
 So, for example, \f[CR]backtick_code_blocks\f[R] does not appear as an
 extension, since it is enabled by default and cannot be disabled.
-.SH CHUNKED HTML
-\f[CR]gwark \-t chunkedhtml\f[R] will produce a zip archive of linked
-HTML files, one for each section of the original document.
-Internal links will automatically be adjusted to point to the right
-place, images linked to under the working directory will be
-incorporated, and navigation links will be added.
-In addition, a JSON file \f[CR]sitemap.json\f[R] will be included
-describing the hierarchical structure of the files.
-.PP
-If an output file without an extension is specified, then it will be
-interpreted as a directory and the zip archive will be automatically
-unpacked into it (unless it already exists, in which case an error will
-be raised).
-Otherwise a \f[CR].zip\f[R] file will be produced.
-.PP
-The navigation links can be customized by adjusting the template.
-By default, a table of contents is included only on the top page.
-To include it on every page, set the \f[CR]toc\f[R] variable manually.
 .SH SYNTAX HIGHLIGHTING
 Pandoc will automatically highlight syntax in fenced code blocks that
 are marked with a language name.

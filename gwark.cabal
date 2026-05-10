@@ -37,7 +37,6 @@ data-files:
                  data/templates/styles.citations.html
                  data/templates/default.html4
                  data/templates/default.html5
-                 data/templates/default.chunkedhtml
                  data/templates/default.markdown
                  data/templates/default.commonmark
                  data/templates/default.plain
@@ -199,7 +198,6 @@ library
                    Text.Pandoc.Readers.Native,
                    Text.Pandoc.Writers,
                    Text.Pandoc.Writers.HTML,
-                   Text.Pandoc.Writers.ChunkedHTML,
                    Text.Pandoc.Writers.Markdown,
                    Text.Pandoc.Writers.Native,
                    Text.Pandoc.Writers.Math,
@@ -221,7 +219,6 @@ library
                    Text.Pandoc.ImageSize,
                    Text.Pandoc.Class,
                    Text.Pandoc.Class.IO,
-                   Text.Pandoc.Chunks,
                    Text.Pandoc.Transforms,
                    Text.Pandoc.Version
   other-modules:   Text.Pandoc.App.CommandLineOptions,

@@ -19,7 +19,6 @@ module Text.Pandoc.Writers
     -- * Writers: converting /from/ Pandoc format
       Writer(..)
     , writers
-    , writeChunkedHTML
     , writeHtml4
     , writeHtml4String
     , writeHtml5
@@ -41,17 +40,14 @@ import qualified Text.Pandoc.Format as Format
 import Text.Pandoc.Options
 import qualified Text.Pandoc.UTF8 as UTF8
 import Text.Pandoc.Error
-import Text.Pandoc.Writers.ChunkedHTML
 import Text.Pandoc.Writers.HTML
 import Text.Pandoc.Writers.Markdown
 import Text.Pandoc.Writers.Native
 
-data Writer m = TextWriter (WriterOptions -> Pandoc -> m Text)
-              | ByteStringWriter (WriterOptions -> Pandoc -> m BL.ByteString)
+newtype Writer m = TextWriter (WriterOptions -> Pandoc -> m Text)
 
--- | Association list of formats and writers. The lean fork keeps only
--- HTML, Markdown (with all flavor aliases routed through writeMarkdown),
--- plain (writePlain), Native, JSON, and chunkedhtml.
+-- | Association list of formats and writers. The lean fork keeps
+-- HTML, Markdown, plain (writePlain), Native, and JSON.
 writers :: PandocMonad m => [ (Text, Writer m) ]
 writers = [
    ("native"            , TextWriter writeNative)
@@ -59,7 +55,6 @@ writers = [
   ,("html"              , TextWriter writeHtml5String)
   ,("html4"             , TextWriter writeHtml4String)
   ,("html5"             , TextWriter writeHtml5String)
-  ,("chunkedhtml"       , ByteStringWriter writeChunkedHTML)
   ,("markdown"          , TextWriter writeMarkdown)
   ,("plain"             , TextWriter writePlain)
   ]

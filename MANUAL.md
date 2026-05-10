@@ -147,8 +147,6 @@ header:
 :   Specify output format.  *FORMAT* can be:
 
     ::: {#output-formats}
-    - `chunkedhtml` (zip archive of multiple linked HTML files;
-      see [Chunked HTML] below)
     - `html` or `html5` ([HTML], i.e. [HTML5]/XHTML [polyglot markup])
     - `html4` ([XHTML] 1.0 Transitional)
     - `json` (JSON version of native AST)
@@ -164,12 +162,8 @@ header:
 
 `-o` *FILE*, `--output=`*FILE*
 
-:   Write output to *FILE* instead of *stdout*.  If *FILE* is
-    `-`, output will go to *stdout*. If the output format is
-    `chunkedhtml` and *FILE* has no extension, then instead of
-    producing a `.zip` file gwark will create a directory *FILE*
-    and unpack the zip archive there (unless *FILE* already
-    exists, in which case an error will be raised).
+:   Write output to *FILE* instead of *stdout*. If *FILE* is
+    `-`, output will go to *stdout*.
 
 `--data-dir=`*DIRECTORY*
 
@@ -942,28 +936,7 @@ header:
     found there, sensible defaults will be used.
 
 
-`--split-level=`*NUMBER*
 
-:   Specify the heading level at which to split an EPUB or
-    chunked HTML document into separate files. The default is to split
-    into chapters at level-1 headings. In the case of EPUB, this
-    option only affects the internal composition of the EPUB, not the way
-    chapters and sections are displayed to users. Some
-    readers may be slow if the chapter files are too large, so for large
-    documents with few level-1 headings, one might want to use a chapter
-    level of 2 or 3. For chunked HTML, this option determines
-    how much content goes in each "chunk."
-
-`--chunk-template=`*PATHTEMPLATE*
-
-:   Specify a template for the filenames in a `chunkedhtml` document.
-    In the template, `%n` will be replaced by the chunk number (padded
-    with leading 0s to 3 digits), `%s` with the section number of the chunk,
-    `%h` with the heading text (with formatting removed), `%i` with
-    the section identifier. For example, `section-%s-%i.html` might
-    be resolved to `section-1.1-introduction.html`. The characters
-    `/` and `\` are not allowed in chunk templates and will be
-    ignored. The default is `%s-%i.html`.
 
 
 
@@ -1524,15 +1497,6 @@ JSON filters by default; the type can be specified explicitly via
 |                                  |   - styles/special.css            |
 | ```                              | ```                               |
 +----------------------------------+-----------------------------------+
-| ```                              | ``` yaml                          |
-| --split-level 2                  | split-level: 2                    |
-| ```                              | ```                               |
-+----------------------------------+-----------------------------------+
-| ```                              | ``` yaml                          |
-| --chunk-template="%i.html"       | chunk-template: "%i.html"         |
-| ```                              | ```                               |
-+----------------------------------+-----------------------------------+
-
 ## Math rendering in HTML
 
 +----------------------------------+-----------------------------------+
@@ -4848,27 +4812,6 @@ Note that the list of extensions for `commonmark`,
 commonmark.  So, for example, `backtick_code_blocks`
 does not appear as an extension, since it is enabled by
 default and cannot be disabled.
-
-# Chunked HTML
-
-`gwark -t chunkedhtml` will produce a zip archive of linked
-HTML files, one for each section of the original document.
-Internal links will automatically be adjusted to point to
-the right place, images linked to under the working directory
-will be incorporated, and navigation links will be added.
-In addition, a JSON file `sitemap.json` will be included
-describing the hierarchical structure of the files.
-
-If an output file without an extension is specified, then
-it will be interpreted as a directory and the zip archive
-will be automatically unpacked into it (unless it already
-exists, in which case an error will be raised).  Otherwise
-a `.zip` file will be produced.
-
-The navigation links can be customized by adjusting the
-template.  By default, a table of contents is included only
-on the top page. To include it on every page, set the
-`toc` variable manually.
 
 # Syntax highlighting
 

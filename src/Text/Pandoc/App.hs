@@ -122,18 +122,6 @@ convertWithOpts scriptingEngine opts = do
       createDirectoryIfMissing True outputFileDir
       case output of
         TextOutput t    -> writerFn eol outputFile t
-        BinaryOutput bs -> writeFnBinary outputFile bs
-        ZipOutput bs
-          | null (takeExtension outputFile)
-          , outputFile /= "-" -> do
-             -- create directory and unzip
-             createDirectory outputFile -- will fail if directory exists
-             let zipopts = [OptRecursive, OptDestination outputFile] ++
-                           [OptVerbose | optVerbosity opts == INFO]
-             case toArchiveOrFail bs of
-               Right archive -> extractFilesFromArchive zipopts archive
-               Left e -> E.throwIO $ PandocShouldNeverHappenError $ T.pack e
-          | otherwise -> writeFnBinary outputFile bs
 
 convertWithOpts' :: (PandocMonad m, MonadIO m, MonadMask m)
                  => ScriptingEngine
@@ -314,9 +302,6 @@ convertWithOpts' scriptingEngine istty datadir opts = do
     createPngFallbacks (writerDpi writerOptions)
 
   output <- case writer of
-    ByteStringWriter f
-      | format == "chunkedhtml" -> ZipOutput <$> f writerOptions doc
-      | otherwise -> BinaryOutput <$> f writerOptions doc
     TextWriter f -> case outputPdfProgram outputSettings of
       Just _ | pdfOutput ->
               throwError $ PandocPDFError
@@ -338,10 +323,7 @@ convertWithOpts' scriptingEngine istty datadir opts = do
   reports <- getLog
   return (output, reports)
 
-data PandocOutput =
-      TextOutput Text
-    | BinaryOutput BL.ByteString
-    | ZipOutput BL.ByteString
+newtype PandocOutput = TextOutput Text
   deriving (Show)
 
 -- | Configure the common state
