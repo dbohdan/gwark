@@ -17,6 +17,10 @@ for use with Hakyll-based static site builds (originally for
   that gwark may diverge as new features land. Full classical
   extension set, including `+latex_macros` and `+raw_tex`.
 - The **HTML reader**.
+- The **LaTeX reader**, primarily for downstream Haskell-API
+  consumers that parse mixed LaTeX strings (e.g. Arxiv abstracts)
+  via `readLaTeX`. The Markdown reader's `+latex_macros` and
+  `+raw_tex` extensions go through this reader too.
 - A few writers: **HTML5** (and HTML4), **Markdown**, and **plain**.
 - The **native** (Haskell AST) and **JSON** representations as
   both reader and writer.

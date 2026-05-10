@@ -42,6 +42,11 @@ sym_readMarkdown = readMarkdown
 sym_readHtml :: PandocMonad m => ReaderOptions -> T.Text -> m Pandoc
 sym_readHtml = readHtml
 
+-- readLaTeX is part of the downstream-API contract: gwern.net's
+-- build/Annotation/Arxiv.hs uses it to parse Arxiv API abstracts.
+sym_readLaTeX :: PandocMonad m => ReaderOptions -> T.Text -> m Pandoc
+sym_readLaTeX = readLaTeX
+
 sym_writeMarkdown :: PandocMonad m => WriterOptions -> Pandoc -> m T.Text
 sym_writeMarkdown = writeMarkdown
 

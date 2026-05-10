@@ -129,9 +129,9 @@ header:
     ::: {#input-formats}
     - `html` ([HTML])
     - `json` (JSON version of native AST)
-    - `latex` ([LaTeX]; stripped reader, retained only to
-      support the Markdown reader's `+latex_macros` and
-      `+raw_tex` extensions)
+    - `latex` ([LaTeX]; the full upstream reader, primarily for
+      downstream Haskell-API consumers that parse mixed LaTeX
+      strings (e.g.\ Arxiv abstracts) via `readLaTeX`)
     - `markdown` ([Gwerndown])
     - `native` (native Haskell)
     :::

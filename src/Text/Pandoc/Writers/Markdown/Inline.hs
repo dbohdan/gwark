@@ -135,13 +135,6 @@ attrsToMarkdown opts attribs = braces $ hsep [attribId, attribClasses, attribKey
               escAttrChar c    = literal $ T.singleton c
 
 
--- | Add a (key, value) pair to Pandoc attr type
-addKeyValueToAttr :: Attr -> (Text,Text) -> Attr
-addKeyValueToAttr (ident,classes,kvs) (key,value)
-    | not (T.null key) && not (T.null value) = (ident,
-                                                classes,
-                                                (key,value): kvs)
-    | otherwise = (ident,classes,kvs)
 
 linkAttributes :: WriterOptions -> Attr -> Doc Text
 linkAttributes opts attr =

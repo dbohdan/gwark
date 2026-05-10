@@ -26,9 +26,11 @@ description:     Lean fork of pandoc, reduced to the formats needed by
                  .
                  Removed: every other reader and writer, citeproc, the Lua
                  scripting engine, and the pandoc-server HTTP API. The
-                 LaTeX reader is retained in stripped form so that the
-                 Markdown reader's @+latex_macros@ extension and
-                 raw-LaTeX passthrough continue to work.
+                 full LaTeX reader is retained: it supports the Markdown
+                 reader's @+latex_macros@ and @+raw_tex@ extensions, and
+                 is also exposed as @readLaTeX@ for downstream
+                 Haskell-API consumers that parse LaTeX strings directly
+                 (e.g.\\ Arxiv abstracts).
                  .
                  The CLI executable lives in the @gwark-cli@ package.
 data-files:
@@ -245,9 +247,14 @@ library
                    Text.Pandoc.Readers.HTML.Table,
                    Text.Pandoc.Readers.HTML.TagCategories,
                    Text.Pandoc.Readers.HTML.Types,
+                   Text.Pandoc.Readers.LaTeX.Citation,
+                   Text.Pandoc.Readers.LaTeX.Inline,
+                   Text.Pandoc.Readers.LaTeX.Lang,
                    Text.Pandoc.Readers.LaTeX.Macro,
                    Text.Pandoc.Readers.LaTeX.Math,
                    Text.Pandoc.Readers.LaTeX.Parsing,
+                   Text.Pandoc.Readers.LaTeX.SIunitx,
+                   Text.Pandoc.Readers.LaTeX.Table,
                    Text.Pandoc.Readers.Metadata,
                    Text.Pandoc.Writers.GridTable,
                    Text.Pandoc.Writers.Markdown.Table,

@@ -145,9 +145,9 @@ Specify input format.
 .IP \(bu 2
 \f[CR]json\f[R] (JSON version of native AST)
 .IP \(bu 2
-\f[CR]latex\f[R] (LaTeX; stripped reader, retained only to
-support the Markdown reader\(cqs \f[CR]+latex_macros\f[R] and
-\f[CR]+raw_tex\f[R] extensions)
+\f[CR]latex\f[R] (LaTeX; the full upstream reader, primarily
+for downstream Haskell\-API consumers that parse mixed LaTeX
+strings such as Arxiv abstracts via \f[CR]readLaTeX\f[R])
 .IP \(bu 2
 \f[CR]markdown\f[R] (Gwerndown)
 .IP \(bu 2

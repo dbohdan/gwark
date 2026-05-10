@@ -38,14 +38,8 @@ import Data.Maybe (fromMaybe, isJust, isNothing)
 import qualified Data.Set as Set
 import Data.Text (Text)
 import qualified Data.Text as T
-import qualified Data.Text.Lazy as TL
-import qualified Data.Text.Lazy.Encoding as TE
-import qualified Data.Text.Encoding.Error as TE
 import Data.Char (toLower)
-import System.Directory (doesDirectoryExist, createDirectory,
-                         createDirectoryIfMissing)
-import Codec.Archive.Zip (toArchiveOrFail,
-                          extractFilesFromArchive, ZipOption(..))
+import System.Directory (doesDirectoryExist, createDirectoryIfMissing)
 import System.Exit (exitSuccess)
 import System.FilePath ( takeBaseName, takeExtension, takeDirectory)
 import System.IO (nativeNewline, stdout)
@@ -395,10 +389,6 @@ isTextFormat s = s `notElem` ["odt","docx","epub2","epub3","epub","pptx"]
 
 adjustMetadata :: (Meta -> Meta) -> Pandoc -> Pandoc
 adjustMetadata f (Pandoc meta bs) = Pandoc (f meta) bs
-
-writeFnBinary :: FilePath -> BL.ByteString -> IO ()
-writeFnBinary "-" = BL.putStr
-writeFnBinary f   = BL.writeFile (UTF8.encodePath f)
 
 writerFn :: IO.Newline -> FilePath -> Text -> IO ()
 writerFn eol "-" = UTF8.putStrWith eol

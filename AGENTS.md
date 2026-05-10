@@ -45,12 +45,15 @@ cherry-picks.
 
 Removed (Phases 1–9): every reader and writer except Markdown
 (Gwerndown — see below), HTML, HTML5/HTML4 writer, Markdown
-writer, plain writer, native (JSON). The LaTeX
-reader is kept in stripped form **only** for the Markdown
-reader's `+latex_macros` and `+raw_tex` extensions. Citeproc is
-gone. `pandoc-server` is gone. PDF output is gone. The
-CommonMark reader is gone — its replacement is `readMarkdown`
-with extension flags.
+writer, plain writer, native (JSON), and the full LaTeX reader
+(restored after Phase 7 had stripped it). The Markdown reader's
+`+latex_macros` and `+raw_tex` extensions go through the LaTeX
+reader, and downstream Haskell consumers can use `readLaTeX`
+directly to parse mixed LaTeX strings (e.g.\ Arxiv abstracts).
+The `latex` *writer* is still gone. Citeproc is gone.
+`pandoc-server` is gone. PDF output is gone. The CommonMark
+reader is gone — its replacement is `readMarkdown` with
+extension flags.
 
 The Markdown dialect that pandoc upstream calls "Pandoc's
 Markdown" is rebranded **Gwerndown** in user-facing prose
@@ -192,9 +195,11 @@ closely):
 
 - `Class/*` (the `PandocMonad` hierarchy)
 - Parsing infrastructure (`Parsing.hs`, `Parsing/*`)
-- The trimmed LaTeX reader (`Readers/LaTeX.hs` plus
-  `LaTeX/Macro.hs`, `Math.hs`, `Parsing.hs`). Upstream changes
-  here are usually orthogonal to the macro / raw subset we kept.
+- The LaTeX reader (`Readers/LaTeX.hs` plus the helper modules
+  under `LaTeX/`: Macro, Math, Parsing, Citation, Inline, Lang,
+  SIunitx, Table). It is the full upstream reader; upstream
+  changes here are usually orthogonal to gwark's surface area
+  but worth tracking.
 
 ## Tests
 

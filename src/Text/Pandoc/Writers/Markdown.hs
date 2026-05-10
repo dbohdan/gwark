@@ -781,7 +781,6 @@ orderedListItemToMarkdown :: PandocMonad m
 orderedListItemToMarkdown opts marker bs = do
   let exts = writerExtensions opts
   contents <- blockListToMarkdown opts $ taskListItemToAscii exts bs
-  variant <- asks envVariant
   let sps = case writerTabStop opts - T.length marker of
                    n | n > 0 -> literal $ T.replicate n " "
                    _ -> literal " "
