@@ -1,0 +1,45 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build and verify (Ubuntu, GHC 9.6.6)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Haskell
+        id: setup
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.6.6'
+
+      - name: Cache cabal store and dist-newstyle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cabal/store
+            dist-newstyle
+          key: ${{ runner.os }}-ghc-${{ steps.setup.outputs.ghc-version }}-${{ hashFiles('**/*.cabal', 'cabal.project') }}
+          restore-keys: |
+            ${{ runner.os }}-ghc-${{ steps.setup.outputs.ghc-version }}-
+
+      - name: cabal update
+        run: cabal update
+
+      - name: cabal build all
+        run: cabal build all
+
+      - name: Smoke conversion
+        run: |
+          gwark_bin=$(cabal list-bin gwark-cli:exe:gwark)
+          "$gwark_bin" --version
+          out=$(echo '# Hi' | "$gwark_bin" -f markdown -t html5)
+          test "$out" = '<h1 id="hi">Hi</h1>'
+
+      - name: Verify API surface compiles
+        run: cabal exec -- ghc -fno-code verify/ApiSurface.hs
+
+      - name: Run roundtrip smoke test
+        run: cabal exec -- runghc verify/Roundtrip.hs

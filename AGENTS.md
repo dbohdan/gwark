@@ -124,8 +124,12 @@ or upstream-only:
   `flake.nix`, `flake.lock`, `release.nix`, `shell.nix`,
   `.cirrus.yml`, `weeder.toml`. Everything is built with
   `cabal build all` against `cabal.project`.
-- **CI**: `.github/workflows/` is gone. Nothing runs on push
-  or PR; verification is manual.
+- **Most of `.github/workflows/`** — the upstream `benchmark`,
+  `commit-validation-pr`, `docx-validation`, `format-validation`,
+  `nightly`, `release-candidate`, `lint.yml.bkp` workflows are
+  gone. A single barebones `ci.yml` survives: it sets up GHC
+  9.6.6 on Ubuntu, runs `cabal build all`, smoke-tests the
+  `gwark` binary on `# Hi`, and runs the two `verify/` scripts.
 - **Packaging** for binary releases: `linux/`, `macos/`,
   `windows/`, `wasm/`. We don't ship binaries.
 - **Tooling**: `tools/` (release scripts, Lua filters for

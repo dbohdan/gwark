@@ -11,6 +11,7 @@
 !.envrc
 !.editorconfig
 !.gitattributes
+!.github
 !.github/**
 !.gitignore
 !.hlint.yaml
