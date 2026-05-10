@@ -1,5 +1,5 @@
 cabal-version:   2.4
-name:            pandoc-cli
+name:            gwark-cli
 version:         3.9.0.2
 build-type:      Simple
 license:         GPL-2.0-or-later
@@ -55,7 +55,7 @@ executable pandoc
   buildable:       True
   -- Note: we always link to an exact version of pandoc, with the
   -- same version as this package:
-  build-depends:   pandoc == 3.9.0.2, text
+  build-depends:   gwark == 3.9.0.2, text
   other-modules:   PandocCLI.Lua
                  , PandocCLI.Server
 

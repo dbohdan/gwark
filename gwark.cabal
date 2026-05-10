@@ -1,5 +1,5 @@
 cabal-version:   2.4
-name:            pandoc
+name:            gwark
 version:         3.9.0.2
 build-type:      Simple
 license:         GPL-2.0-or-later
@@ -325,8 +325,8 @@ library
                    Text.Pandoc.RoffChar,
                    Text.Pandoc.UUID,
                    Text.Pandoc.Image,
-                   Paths_pandoc
-  autogen-modules: Paths_pandoc
+                   Paths_gwark
+  autogen-modules: Paths_gwark
   buildable:       True
 
 test-suite test-pandoc

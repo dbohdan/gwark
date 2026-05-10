@@ -90,7 +90,7 @@ import qualified System.Random
 import qualified Text.Pandoc.UTF8 as UTF8
 import Codec.Archive.Zip
 #ifndef EMBED_DATA_FILES
-import qualified Paths_pandoc as Paths
+import qualified Paths_gwark as Paths
 #endif
 
 -- | Utility function to lift IO errors into 'PandocError's.

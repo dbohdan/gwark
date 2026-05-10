@@ -1,5 +1,5 @@
 packages: .
-          pandoc-cli
+          gwark-cli
 constraints: skylighting-format-blaze-html >= 0.1.2,
              skylighting-format-context >= 0.1.0.2,
              auto-update >= 0.2.6,
@@ -12,5 +12,5 @@ source-repository-package
   location: https://github.com/jgm/doclayout.git
   tag: ef7f18308a61787244a80885d907fcd2c16604d4
 
-package pandoc
+package gwark
   flags: +embed_data_files +http
