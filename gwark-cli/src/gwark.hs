@@ -12,7 +12,8 @@
    Portability : portable
 
 Parses command-line options and calls the appropriate readers and
-writers.
+writers. This is the gwark CLI entry point; it is the lean fork's
+counterpart to the upstream pandoc executable.
 -}
 module Main where
 import qualified Control.Exception as E
@@ -21,16 +22,11 @@ import Text.Pandoc.App ( convertWithOpts, defaultOpts, options
                        , parseOptionsFromArgs, handleOptInfo, versionInfo )
 import Text.Pandoc.Error (handleError)
 import Data.Monoid (Any(..))
-import PandocCLI.Lua
-import PandocCLI.Server
-import Text.Pandoc.Scripting (ScriptingEngine(..))
+import Text.Pandoc.Scripting (ScriptingEngine(..), noEngine)
 import qualified Data.Text as T
 #ifdef NIGHTLY
 import qualified Language.Haskell.TH as TH
 import Data.Time
-#endif
-#ifdef INCLUDE_WASM
-import PandocWasm()
 #endif
 
 #ifdef NIGHTLY
@@ -51,40 +47,19 @@ main = E.handle (handleError . Left) $ do
          (\s -> Any (s == "-v" || s == "--version"))
          (takeWhile (/= "--") rawArgs)
   let versionOr action = if hasVersion then versionInfoCLI else action
-  case prg of
-    "pandoc-server.cgi" -> versionOr runCGI
-    "pandoc-server"     -> versionOr $ runServer rawArgs
-    "pandoc-lua"        -> runLuaInterpreter prg rawArgs
-    _ ->
-      case rawArgs of
-        "lua" : args   -> runLuaInterpreter "pandoc lua" args
-        "server": args -> versionOr $ runServer args
-        args           -> versionOr $ do
-          engine <- getEngine
-          res <- parseOptionsFromArgs options defaultOpts prg args
-          case res of
-            Left e -> handleOptInfo engine e
-            Right opts -> convertWithOpts engine opts
+  versionOr $ do
+    let engine = noEngine
+    res <- parseOptionsFromArgs options defaultOpts prg rawArgs
+    case res of
+      Left e -> handleOptInfo engine e
+      Right opts -> convertWithOpts engine opts
 
-
+-- The gwark CLI never has Lua or server support compiled in.
 getFeatures :: [String]
-getFeatures = [
-#ifdef VERSION_pandoc_server
-  "+server"
-#else
-  "-server"
-#endif
-  ,
-#ifdef VERSION_hslua_cli
-  "+lua"
-#else
-  "-lua"
-#endif
-  ]
+getFeatures = ["-server", "-lua"]
 
 versionInfoCLI :: IO ()
-versionInfoCLI = do
-  scriptingEngine <- getEngine
+versionInfoCLI =
   versionInfo getFeatures
-              (Just $ T.unpack (engineName scriptingEngine))
+              (Just $ T.unpack (engineName noEngine))
               versionSuffix

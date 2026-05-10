@@ -16,7 +16,7 @@ description:     Command-line executable for the lean pandoc fork. Lua,
                  server, and repl support are unconditionally absent;
                  the flags from upstream are removed.
 extra-source-files:
-                 man/pandoc.1
+                 man/gwark.1
 source-repository head
   type:          git
   location:      https://github.com/dbohdan/pandoc.git
@@ -48,16 +48,13 @@ common common-executable
   import:           common-options
   ghc-options:      -rtsopts -with-rtsopts=-A8m
 
-executable pandoc
+executable gwark
   import:          common-executable
-  main-is:         pandoc.hs
-  hs-source-dirs:  src no-lua no-server
+  main-is:         gwark.hs
+  hs-source-dirs:  src
   buildable:       True
-  -- Note: we always link to an exact version of pandoc, with the
-  -- same version as this package:
+  -- Always link to the exact gwark library version of this package.
   build-depends:   gwark == 3.9.0.2, text
-  other-modules:   PandocCLI.Lua
-                 , PandocCLI.Server
 
   ghc-options: -threaded
 

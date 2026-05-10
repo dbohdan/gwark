@@ -1306,7 +1306,7 @@ versionInfo features mbScriptingEngineName suffix = do
                         Nothing -> []
                         Just name -> ["Scripting engine: " ++ name]
   UTF8.putStr $ T.unlines $ map T.pack $
-    ["pandoc " ++ showVersion pandocVersion ++ suffix] ++
+    ["gwark " ++ showVersion pandocVersion ++ suffix] ++
     featuresLine ++
     scriptingLine ++
     ["User data directory: " ++ defaultDatadir,

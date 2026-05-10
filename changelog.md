@@ -1,5 +1,147 @@
 # Revision history for pandoc
 
+## gwark 3.9.0.2 (2026-05-10)
+
+This is the initial release of the **gwark** lean fork of pandoc,
+maintained for use with Hakyll-based static site builds (originally
+for Gwern.net). The fork is hard-forked from upstream pandoc commit
+`12051ec` (release `3.9.0.2` head of `main`); see `FORK.md`,
+`MAINTENANCE.md`, and `BUILD.md` for context. Net effect:
+**~73 % deletion** of upstream's Haskell line count
+(84 637 → 22 852 LOC, 281 → 90 modules).
+
+  * Cabal package and CLI:
+
+    + Renamed cabal package `pandoc` → `gwark`, `pandoc-cli` →
+      `gwark-cli`. Downstream consumers must update `build-depends`.
+    + Renamed CLI executable `pandoc` → `gwark` to avoid name
+      conflict with stock pandoc on `$PATH`. The `--version` banner
+      now prints `gwark X.Y.Z`.
+    + Removed CLI flags `lua`, `server`, `repl` and the corresponding
+      `pandoc-server.cgi` / `pandoc-server` / `pandoc-lua` `argv[0]`
+      dispatch. `--sandbox` is still accepted; `--citeproc` (`-C`)
+      is accepted but is now a no-op.
+    + Renamed autogen module `Paths_pandoc` → `Paths_gwark`.
+
+  * Sibling packages removed (no longer in `cabal.project`):
+
+    + `pandoc-server/` (HTTP server).
+    + `pandoc-lua-engine/` (Lua scripting engine).
+    + `citeproc/` (vendored biblatex localisation strings).
+
+  * Readers removed (37 files plus 7 directories under
+    `src/Text/Pandoc/Readers/`):
+
+    + AsciiDoc, BibTeX, CSV, CommonMark, Creole, CslJson, Djot,
+      DocBook, Docx, DokuWiki, EPUB, EndNote, FB2, Haddock, Ipynb,
+      JATS, Jira, Man, Mdoc, MediaWiki, Muse, ODT, OPML, Org, Pod,
+      Pptx, RIS, RST, RTF, Roff, TWiki, Textile, TikiWiki, Txt2Tags,
+      Typst, Vimwiki, XML, Xlsx.
+    + The `latex` input format is also removed; only the
+      Markdown-reader-internal pieces of the LaTeX reader remain
+      (see below).
+
+  * Readers kept: Markdown, HTML (with the `HTML/` helpers), Native,
+    Metadata, and a stripped LaTeX reader.
+
+  * Writers removed (40 files plus 4 directories under
+    `src/Text/Pandoc/Writers/`):
+
+    + ANSI, AsciiDoc, BBCode, BibTeX, CommonMark, ConTeXt, CslJson,
+      Djot, DocBook, Docx, DokuWiki, EPUB, FB2, Haddock, ICML,
+      Ipynb, JATS, Jira, LaTeX, Man, MediaWiki, Ms, Muse, ODT, OOXML,
+      OPML, OpenDocument, Org, Powerpoint, RST, RTF, Roff, TEI,
+      Texinfo, Textile, Typst, Vimdoc, XML, XWiki, ZimWiki.
+
+  * Writers kept: HTML (HTML4, HTML5, ChunkedHTML, Blaze), Markdown
+    (with `writePlain`, `writeMarkua`, and the `Markdown/` helpers),
+    Native, Math, Shared, AnnotatedTable, GridTable.
+
+  * Citeproc removed:
+
+    + Deleted `src/Text/Pandoc/Citeproc/` and `Citeproc.hs`.
+    + Dropped the `citeproc` Hackage dependency.
+    + `Filter.hs` no longer carries the `CiteprocFilter` constructor.
+    + `Error.hs` no longer carries `PandocCiteprocError`.
+
+  * Lua / scripting:
+
+    + The upstream `Text.Pandoc.Scripting` already shipped a
+      `noEngine` stub. The fork uses it everywhere; no real engine
+      is compiled in. Lua filters fail with
+      `PandocNoScriptingEngine` at run time.
+
+  * LaTeX reader prune:
+
+    + Deleted `src/Text/Pandoc/Readers/LaTeX/{Citation,Inline,Lang,
+      SIunitx,Table}.hs`.
+    + Rewrote `src/Text/Pandoc/Readers/LaTeX.hs` from 1423 to ~110
+      LOC. It now exports only `applyMacros`, `rawLaTeXBlock`, and
+      `rawLaTeXInline`, which is what the Markdown reader's
+      `+latex_macros` and `+raw_tex` extensions need.
+    + Kept `Macro.hs`, `Math.hs`, `Parsing.hs` from `LaTeX/`.
+    + Verified: `\newcommand{\xx}[1]{X#1X}` followed by `$\xx{42}$`
+      round-trips as `Math InlineMath "X42X"` (HTML `\(X42X\)`).
+    + Verified: raw `\textbf{outer}` round-trips as
+      `RawInline (Format "tex") "\\textbf{outer}"`.
+
+  * PDF output removed:
+
+    + Deleted `src/Text/Pandoc/PDF.hs`.
+    + The `App.hs` PDF code-path now throws `PandocPDFError`
+      with a "PDF output is not supported in this lean fork"
+      message.
+
+  * Data files removed:
+
+    + `data/translations/` (i18n YAML; English-only output).
+    + `data/docx/`, `data/odt/`, `data/pptx/`, `data/dzslides/`,
+      `data/epub.css`.
+    + `data/creole.lua`, `data/init.lua`, `data/default.csl`.
+    + Most templates under `data/templates/`. Kept: `default.html4`,
+      `default.html5`, `default.chunkedhtml`, `default.markdown`,
+      `default.markua`, `default.commonmark`, `default.plain`,
+      `styles.html`, `styles.citations.html`.
+
+  * Build and dependency adjustments:
+
+    + Pinned `texmath == 0.13.0.1` and
+      `typst-symbols >= 0.1.8.1 && < 0.1.9` in `cabal.project`.
+      Texmath HEAD on GitHub depends on a `typst-symbols` dev API
+      that is not yet on Hackage; the pinned versions resolve
+      cleanly.
+    + Re-added `commonmark` and `commonmark-pandoc` because
+      `Shared.addPandocAttributes` (kept on the public API) uses
+      them.
+    + Dropped CLI-only dependencies (`hslua-cli`, `pandoc-server`,
+      `wai-extra`, `warp`, …).
+
+  * Documentation:
+
+    + Added `BUILD.md` with verified Ubuntu 24.04 from-scratch
+      build instructions (GHC 9.6.6, cabal 3.10.3.0 via ghcup).
+    + Added `FORK.md` with phase log and final cloc numbers.
+    + Added `MAINTENANCE.md` with the cherry-pick-only
+      upstream-merge strategy.
+    + Updated `README.md` with a fork notice describing what is
+      kept and what is gone.
+    + Added `verify/ApiSurface.hs` — every public symbol Hakyll and
+      Gwern's build directory rely on, mentioned in monomorphic
+      bindings; compiles clean against the fork.
+    + Added `verify/Roundtrip.hs` — Markdown → AST → HTML5 +
+      Markdown + plain pipeline against a non-trivial sample,
+      including math, footnotes, syntax-highlighted code, and a
+      macro definition.
+
+  * Deferred / declined trims (documented in `MAINTENANCE.md`):
+
+    + `Class/Sandbox.hs` is still present; removing it cleanly
+      requires App-layer surgery the original plan understated.
+    + `Logging.hs` constructors are not pruned; most are still
+      referenced by kept code.
+    + `Class/IO/HTTP.hs` and `SelfContained.hs` are kept by user
+      request, in case `--self-contained` is in use.
+
 ## pandoc 3.9.0.2 (2026-03-19)
 
   * Typst template: fix regression introduced in 3.9.0.1 (#11538).
