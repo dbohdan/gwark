@@ -16,9 +16,11 @@
 !.hlint.yaml
 !.mailmap
 !.stylish-haskell.yaml
+!AGENTS.md
 !AUTHORS.md
 !BUGS
 !CITATION.cff
+!CLAUDE.md
 !CONTRIBUTING.md
 !COPYING.md
 !COPYRIGHT
