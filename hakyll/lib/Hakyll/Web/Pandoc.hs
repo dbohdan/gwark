@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 --------------------------------------------------------------------------------
 -- | Module exporting convenient pandoc bindings
 module Hakyll.Web.Pandoc
@@ -60,9 +59,13 @@ readPandocWith ropt item =
   where
     reader ro t = case t of
         Html               -> readHtml ro
-        LaTeX              -> readLaTeX ro
         LiterateHaskell t' -> reader (addExt ro Ext_literate_haskell) t'
         Markdown           -> readMarkdown ro
+        -- NOTE: LaTeX is dispatched as a FileType but not handled
+        -- here. gwark on 'main' does not currently expose
+        -- 'readLaTeX'; the 'claude/gwark-trim' branch restores it
+        -- and re-adding the 'LaTeX -> readLaTeX ro' arm here once
+        -- that branch lands is a one-line follow-up.
         _                  -> error $
             "Hakyll.Web.readPandocWith: I don't know how to read a file of " ++
             "the type " ++ show t ++ " for: " ++ show (itemIdentifier item)
@@ -217,16 +220,10 @@ defaultHakyllWriterOptions = def
     { -- This option causes literate haskell to be written using '>' marks in
       -- html, which I think is a good default.
       writerExtensions = enableExtension Ext_smart pandocExtensions
-    , -- We want to have hightlighting by default, to be compatible with earlier
-      -- Hakyll releases
-#if MIN_VERSION_pandoc(3,8,0)
-      -- Starting with pandoc 3.8, the highlighting
-      -- system was overhauled to have more than just Skylighting
-      -- styles
+    , -- We want to have highlighting by default; gwark is based on
+      -- pandoc 3.9, where the highlighting field is named
+      -- writerHighlightMethod.
       writerHighlightMethod = Skylighting pygments
-#else
-      writerHighlightStyle = Just pygments
-#endif
     , -- Do not word-wrap produced HTML, and do not undo any word-wrapping
       -- that's already present in the markup. This is how Pandoc operated
       -- prior to 2.17, but the behaviour was changed for consistency with

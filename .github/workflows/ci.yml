@@ -70,3 +70,11 @@ jobs:
             -o dist-newstyle/verify/Roundtrip \
             verify/Roundtrip.hs
           dist-newstyle/verify/Roundtrip > /dev/null
+
+      # hakyll-gwark ships its own tasty test suite (inherited
+      # from upstream Hakyll). This is gwark's first real
+      # 'cabal test' invocation in CI.
+      - name: hakyll-gwark test suite
+        env:
+          LANG: C.UTF-8
+        run: cabal test --disable-optimization hakyll-gwark

@@ -27,6 +27,14 @@ for use with Hakyll-based static site builds (originally for
 - The **JSON filter pipeline** via `Text.Pandoc.Filter` and the
   CLI's `--filter` option.
 - The CLI executable **`gwark`** (renamed from `pandoc`).
+- **`hakyll-gwark`** — an in-tree fork of [Hakyll][hakyll],
+  the Haskell static-site-compiler library, targeted at gwark.
+  Module names are unchanged from upstream Hakyll; the package
+  rename signals divergence. Drops `Hakyll.Web.Pandoc.Biblio`
+  and the reader-dispatch arms for formats gwark doesn't ship.
+  See [`hakyll/README.markdown`](hakyll/README.markdown).
+
+[hakyll]: https://github.com/jaspervdj/hakyll
 
 ## What gwark does **not** ship
 
@@ -59,10 +67,15 @@ applies.
 - [`AGENTS.md`](AGENTS.md) — guidance for AI coding assistants.
 - [`changelog.md`](changelog.md) — gwark's changes on top of the
   upstream history.
+- [`hakyll/README.markdown`](hakyll/README.markdown) — the
+  `hakyll-gwark` fork (in `hakyll/`).
 
 ## License
 
-GPL-2.0-or-later, same as upstream pandoc. See
-[`COPYING.md`](COPYING.md) and [`AUTHORS.md`](AUTHORS.md).
+The gwark library and CLI are GPL-2.0-or-later, same as upstream
+pandoc. The bundled `hakyll-gwark` package is BSD-3-clause, same
+as upstream Hakyll. See [`COPYING.md`](COPYING.md),
+[`AUTHORS.md`](AUTHORS.md), and the per-third-party-license
+notices in [`licenses/`](licenses/).
 
 For the full-featured pandoc, see <https://github.com/jgm/pandoc>.

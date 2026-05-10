@@ -8,6 +8,24 @@
     branches. The `origin/gwark-lua` remote branch itself is not
     deleted; only the in-repo documentation referring to it.
 
+  * Bundled `hakyll-gwark`, a fork of
+    [Hakyll](https://github.com/jaspervdj/hakyll) version
+    `4.17.0.0`, in `hakyll/`. The fork repoints Hakyll's `pandoc`
+    build-dep to `gwark`, drops `Hakyll.Web.Pandoc.Biblio`
+    (citeproc is not part of gwark), and prunes the reader
+    dispatch + `FileType` enum for formats gwark doesn't ship
+    (DocBook, Ipynb, MediaWiki, Org, RST, Textile, AsciiDoc,
+    Djot, Typst). Renames the package and the
+    `hakyll-init` executable accordingly; module names
+    (`Hakyll.*`) are unchanged. CI now runs the bundled tasty
+    test suite via `cabal test hakyll-gwark`. See
+    [`hakyll/CHANGELOG.md`](hakyll/CHANGELOG.md) for the
+    fork-side change log.
+
+  * Added a `licenses/` directory at the repo root for
+    per-third-party-source license notices
+    (`licenses/hakyll-BSD-3.txt` for the bundled Hakyll fork).
+
 ## gwark 3.9.0.2.1 (2026-05-10)
 
   * Restored `data/translations/en.yaml` from upstream; was

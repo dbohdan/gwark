@@ -7,6 +7,14 @@ under GPL-2.0-or-later, the same license as upstream pandoc, and
 preserves the full pandoc copyright and contributor attribution
 that follows.
 
+The repository also bundles `hakyll-gwark`, a fork of
+[Hakyll](https://github.com/jaspervdj/hakyll) by Jasper Van der
+Jeugt and the Hakyll contributors (see
+[`hakyll/CHANGELOG.md`](hakyll/CHANGELOG.md) for upstream
+release history). The fork is licensed under BSD-3-clause, the
+same license as upstream Hakyll; see
+[`licenses/hakyll-BSD-3.txt`](licenses/hakyll-BSD-3.txt).
+
 # Pandoc contributors (upstream)
 
 The list below is upstream pandoc's `AUTHORS.md` carried verbatim.

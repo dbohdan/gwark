@@ -62,10 +62,15 @@ cabal build all
 
 Expected build artefacts:
 
-- The `gwark` library: `dist-newstyle/build/<arch>/ghc-9.6.6/gwark-3.9.0.2/build/libHSgwark-*.a`
-- The `gwark` executable: `dist-newstyle/build/<arch>/ghc-9.6.6/gwark-cli-3.9.0.2/x/gwark/build/gwark/gwark`
+- The `gwark` library.
+- The `gwark` executable (under `gwark-cli`).
+- The `hakyll-gwark` library (under `hakyll/`) — an in-tree fork
+  of Hakyll for gwark.
+- The `hakyll-gwark-init` executable (Hakyll's new-site
+  bootstrapper, renamed for the fork).
 
-Exact path is reported by `cabal list-bin gwark`.
+Exact paths reported by `cabal list-bin gwark-cli:exe:gwark` and
+`cabal list-bin hakyll-gwark:exe:hakyll-gwark-init`.
 
 ## 4. Smoke test
 

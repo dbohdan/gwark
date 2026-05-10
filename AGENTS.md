@@ -18,12 +18,15 @@ will fail.
 
 ## Package layout
 
-`cabal.project` lists `.` (the `gwark` library — the package was
-renamed from `pandoc`) and `gwark-cli`.
+`cabal.project` lists three packages: `.` (the `gwark`
+library — the package was renamed from `pandoc`), `gwark-cli`
+(the CLI exe), and `hakyll` (the `hakyll-gwark` package — a fork
+of Hakyll targeted at gwark, vendored under `hakyll/`).
 
 The CLI executable is named `gwark`. `cabal list-bin gwark` is
 ambiguous because it matches the library — always use
-`cabal list-bin gwark-cli:exe:gwark`.
+`cabal list-bin gwark-cli:exe:gwark`. The Hakyll fork ships an
+`hakyll-gwark-init` exe; `cabal list-bin hakyll-gwark:exe:hakyll-gwark-init`.
 
 Build environment expectation: GHC 9.6.6 in `~/.ghcup/bin`. Most
 sessions need `export PATH=~/.ghcup/bin:$PATH` before invoking
@@ -190,6 +193,28 @@ closely):
   SIunitx, Table). It is the full upstream reader; upstream
   changes here are usually orthogonal to gwark's surface area
   but worth tracking.
+
+### Hakyll fork (`hakyll/`)
+
+The `hakyll-gwark` package under `hakyll/` is forked from
+`jaspervdj/hakyll@4.17.0.0`, tagged in the repo as
+`upstream-hakyll-4.17.0.0`. Cherry-pick upstream Hakyll the same
+way:
+
+    git remote add upstream-hakyll https://github.com/jaspervdj/hakyll.git
+    git fetch upstream-hakyll
+    git log upstream-hakyll/master -- \
+      lib/Hakyll/Web/Pandoc.hs \
+      lib/Hakyll/Web/Pandoc/FileType.hs
+
+**High-attention files** in the Hakyll fork (mirror gwark's
+reader surface; need watching when Hakyll updates):
+
+- `hakyll/lib/Hakyll/Web/Pandoc.hs` — reader case dispatch.
+- `hakyll/lib/Hakyll/Web/Pandoc/FileType.hs` — file-extension
+  enum.
+- `hakyll/hakyll.cabal` — drops `Hakyll.Web.Pandoc.Biblio`, swaps
+  `pandoc` → `gwark` build-dep, renames package + init exe.
 
 ## Tests
 
