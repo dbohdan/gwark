@@ -28,8 +28,11 @@ jobs:
       - name: cabal update
         run: cabal update
 
-      - name: cabal build all
-        run: cabal build all
+      # CI builds with optimization disabled to keep the runner
+      # under the free-tier minutes budget. Local developer builds
+      # keep the cabal default (-O1).
+      - name: cabal build all (no optimization)
+        run: cabal build all --disable-optimization
 
       - name: Smoke conversion
         run: |
