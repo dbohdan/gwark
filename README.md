@@ -1,5 +1,7 @@
 # gwark — pandoc lean fork
 
+> _A particular markup converter._
+
 **gwark** is a stripped-down fork of [pandoc][pandoc], maintained
 for use with Hakyll-based static site builds (originally for
 [Gwern.net](https://gwern.net)). It supports a single workflow:
