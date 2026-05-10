@@ -50,6 +50,8 @@ data-files:
                  data/abbreviations
                  -- bash completion template
                  data/bash_completion.tpl
+                 -- Lua bootstrap script (sourced once per Lua run)
+                 data/init.lua
                  -- documentation
                  MANUAL.txt, COPYRIGHT
 extra-doc-files: changelog.md,

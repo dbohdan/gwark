@@ -80,6 +80,19 @@ echo '# Hello' | cabal exec gwark -- -f markdown -t html5
 # <h1 id="hello">Hello</h1>
 ```
 
+To smoke-test Lua filter support:
+
+```
+verify/lua/run-tests.sh
+# 5 passed, 0 failed
+```
+
+To build without Lua:
+
+```
+cabal build --constraint='gwark-cli -lua' all
+```
+
 ## 5. Install (optional)
 
 ```

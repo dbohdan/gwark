@@ -13,11 +13,13 @@ It still ships:
 - the HTML5 writer (HTML4 also)
 - the Markdown writer, plain writer, and Markua writer
 - the JSON filter pipeline via `Text.Pandoc.Filter`
-- the `pandoc` CLI executable, restricted to the formats above
+- Lua filters via `--lua-filter=FILE.lua` (CLI flag `lua`, default
+  on; pass `--constraint='gwark-cli -lua'` to drop)
+- the `gwark` CLI executable, restricted to the formats above
 
 It does **not** ship:
 
-- Lua filters or any scripting engine
+- the Lua REPL (`pandoc lua ...` subcommand) — filters only
 - citeproc / built-in citation processing
 - the `pandoc-server` HTTP API
 - any other reader (DOCX, EPUB, AsciiDoc, RST, Org, Typst, ipynb, …)

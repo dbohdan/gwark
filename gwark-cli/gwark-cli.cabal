@@ -12,14 +12,21 @@ stability:       alpha
 homepage:        https://pandoc.org
 category:        Text
 synopsis:        Conversion between Pandoc Markdown and HTML (lean fork CLI)
-description:     Command-line executable for the lean pandoc fork. Lua,
-                 server, and repl support are unconditionally absent;
-                 the flags from upstream are removed.
+description:     Command-line executable for the lean pandoc fork.
+                 The HTTP server and Lua REPL flags from upstream are
+                 removed. Lua filter support is on by default; build
+                 with -f-lua to drop it.
 extra-source-files:
                  man/gwark.1
 source-repository head
   type:          git
   location:      https://github.com/dbohdan/pandoc.git
+
+flag lua
+  Description:   Support custom modifications and conversions with
+                 the pandoc Lua scripting engine. Filters only;
+                 the @gwark lua@ REPL subcommand is not exposed.
+  Default:       True
 
 flag nightly
   Description:   Add '-nightly-COMPILEDATE' to the output of '--version'.
@@ -55,8 +62,16 @@ executable gwark
   buildable:       True
   -- Always link to the exact gwark library version of this package.
   build-depends:   gwark == 3.9.0.2, text
+  other-modules:   PandocCLI.Lua
 
-  ghc-options: -threaded
+  ghc-options:     -threaded
+
+  if flag(lua)
+    build-depends:   pandoc-lua-engine >= 0.5 && < 0.6
+    hs-source-dirs:  lua
+    cpp-options:     -DLUA
+  else
+    hs-source-dirs:  no-lua
 
   if flag(nightly)
     cpp-options:    -DNIGHTLY

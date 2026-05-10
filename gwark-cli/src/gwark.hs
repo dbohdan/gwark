@@ -22,7 +22,8 @@ import Text.Pandoc.App ( convertWithOpts, defaultOpts, options
                        , parseOptionsFromArgs, handleOptInfo, versionInfo )
 import Text.Pandoc.Error (handleError)
 import Data.Monoid (Any(..))
-import Text.Pandoc.Scripting (ScriptingEngine(..), noEngine)
+import PandocCLI.Lua (getEngine)
+import Text.Pandoc.Scripting (ScriptingEngine(..))
 import qualified Data.Text as T
 #ifdef NIGHTLY
 import qualified Language.Haskell.TH as TH
@@ -48,18 +49,26 @@ main = E.handle (handleError . Left) $ do
          (takeWhile (/= "--") rawArgs)
   let versionOr action = if hasVersion then versionInfoCLI else action
   versionOr $ do
-    let engine = noEngine
+    engine <- getEngine
     res <- parseOptionsFromArgs options defaultOpts prg rawArgs
     case res of
       Left e -> handleOptInfo engine e
       Right opts -> convertWithOpts engine opts
 
--- The gwark CLI never has Lua or server support compiled in.
 getFeatures :: [String]
-getFeatures = ["-server", "-lua"]
+getFeatures =
+  [
+#ifdef LUA
+    "+lua"
+#else
+    "-lua"
+#endif
+  , "-server"
+  ]
 
 versionInfoCLI :: IO ()
-versionInfoCLI =
+versionInfoCLI = do
+  scriptingEngine <- getEngine
   versionInfo getFeatures
-              (Just $ T.unpack (engineName noEngine))
+              (Just $ T.unpack (engineName scriptingEngine))
               versionSuffix

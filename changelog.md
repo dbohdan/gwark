@@ -1,5 +1,53 @@
 # Revision history for pandoc
 
+## gwark 3.9.0.2.2 (2026-05-10)
+
+Re-add Lua filter support behind a cabal flag, after dropping
+it in error during the `gwark 3.9.0.2` lean-down. The Lua REPL
+(`gwark lua ...` subcommand) is *not* restored; only filter
+support via `--lua-filter=FILE.lua`.
+
+  * Restored the `pandoc-lua-engine` sibling package from
+    upstream-3.9.0.2 and added it to `cabal.project`. Repointed
+    its library and test-suite `build-depends` from `pandoc` to
+    `gwark`. Two upstream Lua modules were trimmed to compile
+    against the lean library:
+
+    + `pandoc-lua-engine/src/Text/Pandoc/Lua/Documentation.hs`:
+      switched from the deleted `readCommonMark` to `readMarkdown`.
+    + `pandoc-lua-engine/src/Text/Pandoc/Lua/Module/Utils.hs`:
+      removed `pandoc.utils.citeproc` and `pandoc.utils.references`
+      (citeproc was dropped in `gwark 3.9.0.2`).
+
+  * Restored `data/init.lua` (bootstrap script the Lua engine
+    sources on every run); listed in `gwark.cabal` `data-files`.
+
+  * `gwark-cli`:
+
+    + Added cabal flag `lua` (default `True`). With `+lua`, the
+      executable links `pandoc-lua-engine` and the
+      `--lua-filter=FILE.lua` option works. Build without it
+      via `cabal build --constraint='gwark-cli -lua' all`; in
+      that build, `--lua-filter` fails at run time with
+      `PandocNoScriptingEngine`.
+    + `--version` now prints `+lua` or `-lua` and the scripting
+      engine line reads `Lua 5.4` or `none` accordingly.
+    + `gwark-cli/lua/PandocCLI/Lua.hs` re-exports the real
+      `getEngine` from `Text.Pandoc.Lua`.
+    + `gwark-cli/no-lua/PandocCLI/Lua.hs` returns `noEngine` so
+      the executable links cleanly with `-lua`.
+
+  * Tests: added `verify/lua/run-tests.sh` plus two filters
+    under `verify/lua/`. Five end-to-end checks against the
+    built `gwark`:
+
+    + `uppercase.lua` upper-cases every `Str`.
+    + `wrap-emph.lua` wraps each `Str` in `Emph` and sets a
+      `wrap-emph: true` metadata field.
+    + The metadata mutation reaches a standalone Markdown writer.
+    + Filter chaining: `--lua-filter A --lua-filter B`.
+    + The `--version` banner reports `+lua`.
+
 ## gwark 3.9.0.2.1 (2026-05-10)
 
   * Restored `data/translations/en.yaml` from upstream; was
