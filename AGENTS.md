@@ -144,6 +144,50 @@ that matches the lean surface — don't restore the upstream
 artefact verbatim. They almost always reference deleted readers,
 writers, or packages.
 
+## Maintenance
+
+Hard fork. Upstream pandoc is **not** tracked automatically.
+Major upstream releases will not be merged wholesale — the
+fork's value is the smaller surface area and faster build, both
+of which a blanket merge would erase.
+
+When a relevant upstream change occurs (security fix, Markdown
+reader bug, HTML writer regression), pull it as a targeted
+cherry-pick:
+
+    git remote add upstream https://github.com/jgm/pandoc.git
+    git fetch upstream
+    git log upstream/main -- \
+      src/Text/Pandoc/Readers/Markdown.hs \
+      src/Text/Pandoc/Readers/HTML.hs \
+      src/Text/Pandoc/Writers/HTML.hs \
+      src/Text/Pandoc/Writers/Markdown.hs \
+      src/Text/Pandoc/Extensions.hs \
+      src/Text/Pandoc/Options.hs
+
+Cherry-pick selectively. Conflicts in deleted files don't apply;
+resolve by keeping the deletion side.
+
+**High-attention files** (frequent upstream changes, watch
+closely):
+
+- `src/Text/Pandoc/Readers/Markdown.hs`
+- `src/Text/Pandoc/Readers/HTML.hs` (and `Readers/HTML/`)
+- `src/Text/Pandoc/Writers/HTML.hs`
+- `src/Text/Pandoc/Writers/Markdown.hs` (and
+  `Writers/Markdown/`)
+- `src/Text/Pandoc/Extensions.hs`
+- `src/Text/Pandoc/Options.hs`
+- the `pandoc-types` Hackage dep (not vendored)
+
+**Low-attention files** (rarely change upstream):
+
+- `Class/*` (the `PandocMonad` hierarchy)
+- Parsing infrastructure (`Parsing.hs`, `Parsing/*`)
+- The trimmed LaTeX reader (`Readers/LaTeX.hs` plus
+  `LaTeX/Macro.hs`, `Math.hs`, `Parsing.hs`). Upstream changes
+  here are usually orthogonal to the macro / raw subset we kept.
+
 ## Tests
 
 - `verify/ApiSurface.hs`, `verify/Roundtrip.hs` — preserved
@@ -151,19 +195,42 @@ writers, or packages.
 - `verify/lua/run-tests.sh` (Lua branch only) — five-check shell
   smoke test for `--lua-filter`.
 
-There is no `test/` tree, no `cabal test`, and no CI. The
-upstream `test-suite test-pandoc` stanza, the matching `test/`
-fixtures, and the `benchmark/` stanza were deleted because they
-depended on the removed upstream `pandoc` package. Verification
-is manual: build (`cabal build all`), run a smoke conversion,
-optionally run the scripts under `verify/`. Add new checks under
-`verify/`.
+There is no `test/` tree and no `cabal test`. The upstream
+`test-suite test-pandoc` stanza, the matching `test/` fixtures,
+and the `benchmark/` stanza were deleted because they depended on
+the removed upstream `pandoc` package. Verification is `cabal
+build all` plus the scripts under `verify/`; add new checks
+there.
+
+`verify/ApiSurface.hs` is the **downstream-API contract**. If a
+change breaks one of the imports it exercises, downstream Hakyll-
+and Gwern-style consumers fail to build. To smoke-test the public
+API, drop `ApiSurface.hs` and `Roundtrip.hs` into a sibling cabal
+project that depends on `gwark` and `pandoc-types` and run
+`cabal build` there.
 
 ## CLI surface
 
 The executable is `gwark`, not `pandoc`. `--version` reports
 `Features: -server [+/-]lua` and the scripting engine line — use
 these to confirm which build is in your hands.
+
+## Deferred work
+
+Items the lean-down plan called for but didn't land, kept here so
+they aren't lost:
+
+- **Drop `Class/Sandbox`** (was upstream phase P9.1). The sandbox
+  is wired into the App layer (`--sandbox` CLI flag, sandboxed
+  reader/writer paths). Removing it cleanly is larger surgery
+  than the original plan suggested.
+- **Trim `Logging.hs`** (was P9.3). Most `LogMessage`
+  constructors are still referenced by code we kept (Markdown,
+  HTML, Filter, App). Trimming requires per-constructor caller
+  analysis.
+- **HTTP and `--self-contained`** (P9.2 / P9.4 in the original
+  plan): kept by user choice, since `--self-contained` may be in
+  use downstream.
 
 ## Conventions
 

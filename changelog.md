@@ -19,7 +19,7 @@ This is the initial release of the **gwark** lean fork of pandoc,
 maintained for use with Hakyll-based static site builds (originally
 for Gwern.net). The fork is hard-forked from upstream pandoc commit
 `12051ec` (release `3.9.0.2` head of `main`); see `FORK.md`,
-`MAINTENANCE.md`, and `BUILD.md` for context. Net effect:
+`AGENTS.md`, and `BUILD.md` for context. Net effect:
 **~73 % deletion** of upstream's Haskell line count
 (84 637 → 22 852 LOC, 281 → 90 modules).
 
