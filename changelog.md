@@ -1,5 +1,18 @@
 # Revision history for pandoc
 
+## gwark 3.9.0.2.1 (2026-05-10)
+
+  * Restored `data/translations/en.yaml` from upstream; was
+    dropped in error during `gwark 3.9.0.2`. Listed in
+    `gwark.cabal` `data-files`. The English-translations warning
+    that printed on every conversion --
+
+        [WARNING] Could not load translations for en-US
+          data file translations/en.yaml not found
+        [WARNING] The term Abstract has no translation defined.
+
+    -- is gone. Output is unchanged otherwise.
+
 ## gwark 3.9.0.2 (2026-05-10)
 
 This is the initial release of the **gwark** lean fork of pandoc,

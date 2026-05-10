@@ -80,11 +80,6 @@ echo '# Hello' | cabal exec gwark -- -f markdown -t html5
 # <h1 id="hello">Hello</h1>
 ```
 
-The English-translation warning that prints on every conversion
-(`data file translations/en.yaml not found`) is harmless: the lean
-fork drops `data/translations/`, but the translation lookup is still
-attempted. It does not affect output.
-
 ## 5. Install (optional)
 
 ```

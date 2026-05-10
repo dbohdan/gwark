@@ -43,6 +43,9 @@ data-files:
                  data/templates/default.plain
                  -- entities
                  data/docbook-entities.txt
+                 -- English translations (Translations module looks up
+                 -- terms like "Abstract", "Bibliography" here)
+                 data/translations/en.yaml
                  -- default abbreviations file
                  data/abbreviations
                  -- bash completion template
