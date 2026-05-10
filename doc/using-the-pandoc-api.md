@@ -296,9 +296,9 @@ main = do
                     Just stations -> createLetter [s | s <- stations,
                                         "Voyager" `elem` cardsAccepted s]
                     Nothing       -> error "Could not decode JSON"
-  docx <- runIO (writeDocx def letter) >>= handleError
-  BL.writeFile "letter.docx" docx
-  putStrLn "Created letter.docx"
+  html <- runIO (writeHtml5String def letter) >>= handleError
+  TIO.writeFile "letter.html" html
+  putStrLn "Created letter.html"
 ```
 
 Voila!  You've written the letter without using Word and

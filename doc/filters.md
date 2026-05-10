@@ -20,19 +20,13 @@ reader and the writer.
 
     INPUT --reader--> AST --filter--> AST --writer--> OUTPUT
 
-Pandoc supports two kinds of filters:
-
-- **Lua filters** use the Lua language to
-  define transformations on the pandoc AST.  They are
-  described in a [separate document](lua-filters.html).
-
-- **JSON filters**, described here, are pipes that read from
-  standard input and write to standard output, consuming and
-  producing a JSON representation of the pandoc AST:
+In gwark, JSON filters are pipes that read from standard input
+and write to standard output, consuming and producing a JSON
+representation of the pandoc AST:
 
                              source format
                                   ↓
-                               (pandoc)
+                               (gwark)
                                   ↓
                           JSON-formatted AST
                                   ↓
@@ -40,28 +34,22 @@ Pandoc supports two kinds of filters:
                                   ↓
                           JSON-formatted AST
                                   ↓
-                               (pandoc)
+                               (gwark)
                                   ↓
                             target format
 
-Lua filters have a couple of advantages.  They use a Lua
-interpreter that is embedded in pandoc, so you don't need
-to have any external software installed.  And they are
-usually faster than JSON filters.  But if you wish to
-write your filter in a language other than Lua, you may
-prefer to use a JSON filter. JSON filters may be written
-in any programming language.
+JSON filters may be written in any programming language.
 
 You can use a JSON filter directly in a pipeline:
 
-    pandoc -s input.txt -t json | \
-     pandoc-citeproc | \
-     pandoc -s -f json -o output.html
+    gwark -s input.txt -t json | \
+     my-filter | \
+     gwark -s -f json -o output.html
 
 But it is more convenient to use the `--filter` option,
 which handles the plumbing automatically:
 
-    pandoc -s input.txt --filter pandoc-citeproc -o output.html
+    gwark -s input.txt --filter my-filter -o output.html
 
 For a gentle introduction into writing your own filters,
 continue this guide. There’s also a [list of third party filters
@@ -262,12 +250,6 @@ Don't like Python? There are also ports of pandocfilters in
   - [node-pandoc-filter](https://github.com/mu-io/node-pandoc-filter),
 - [Groovy](https://github.com/dfrommi/groovy-pandoc), and
 - [Ruby](https://heerdebeer.org/Software/markdown/paru/).
-
-Starting with pandoc 2.0, pandoc includes built-in support for
-writing filters in lua.  The lua interpreter is built in to
-pandoc, so a lua filter does not require any additional software
-to run.  See the [documentation on lua
-filters](https://pandoc.org/lua-filters.html).
 
 # Include files
 
